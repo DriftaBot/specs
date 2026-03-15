@@ -45,4 +45,4 @@ companies' public GitHub repositories.
 
 def build_agent():
     model = ChatAnthropic(model="claude-sonnet-4-6", max_tokens=8096)
-    return create_react_agent(model=model, tools=ALL_TOOLS, prompt=SYSTEM_PROMPT, handle_tool_errors=True)
+    return create_react_agent(model=model, tools=ALL_TOOLS, prompt=SYSTEM_PROMPT)

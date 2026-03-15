@@ -122,8 +122,12 @@ def list_repo_directory(
     List files in a GitHub repository directory.
     Returns a JSON array of objects with 'name', 'path', 'type', and 'sha' fields.
     Only returns files (not subdirectories).
+    On error returns a JSON object with an 'error' field.
     """
-    return json.dumps(list_dir(repo, path), indent=2)
+    try:
+        return json.dumps(list_dir(repo, path), indent=2)
+    except Exception as exc:
+        return json.dumps({"error": str(exc)})
 
 
 @tool
@@ -135,9 +139,13 @@ def fetch_spec(
     Fetch a spec file from a GitHub repository.
     Returns a JSON object with 'content' (raw file text) and 'sha' (GitHub blob SHA).
     Large files (>1MB) are fetched via the raw download URL.
+    On error returns a JSON object with an 'error' field.
     """
-    content, sha = fetch_file(repo, path)
-    return json.dumps({"content": content, "sha": sha})
+    try:
+        content, sha = fetch_file(repo, path)
+        return json.dumps({"content": content, "sha": sha})
+    except Exception as exc:
+        return json.dumps({"error": str(exc)})
 
 
 @tool
