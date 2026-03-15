@@ -5,11 +5,13 @@ Implements the same 5-phase flow as the agent: detect changed specs, detect
 breaking changes, discover consumer repos, check usage, create issues.
 Used as the fallback when ANTHROPIC_API_KEY is not set.
 """
+from crawler.config import register_consumer
 from notifier.tools import (
     check_consumer_usage_plain,
     create_issue_plain,
     detect_breaking_changes_plain,
     get_changed_specs_plain,
+    log_issue,
     search_consumer_repos_plain,
 )
 
@@ -169,6 +171,12 @@ def run() -> None:
                 else:
                     total_errors += 1
                     print(f"  [error]         {repo['full_name']}: {result.get('error')}")
+                    continue
+
+                if not repo["registered"]:
+                    register_consumer(repo["full_name"], company_name)
+                if result.get("url"):
+                    log_issue(repo["full_name"], result["url"], title, company_name, result["status"])
 
     print(
         f"\nDone — breaking changes: {total_breaking}, "

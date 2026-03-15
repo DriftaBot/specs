@@ -55,3 +55,30 @@ def load_consumer_registry() -> ConsumerRegistry:
     with open(CONSUMERS_YAML) as f:
         data = yaml.safe_load(f) or {}
     return ConsumerRegistry.model_validate(data)
+
+
+def register_consumer(repo: str, company: str) -> None:
+    """Add repo/company to consumer.companies.yaml if not already present."""
+    if CONSUMERS_YAML.exists():
+        with open(CONSUMERS_YAML) as f:
+            data = yaml.safe_load(f) or {}
+        raw = CONSUMERS_YAML.read_text()
+    else:
+        data = {}
+        raw = ""
+
+    consumers = data.get("consumers", [])
+    for entry in consumers:
+        if entry.get("repo") == repo:
+            if company not in entry.get("companies", []):
+                entry["companies"].append(company)
+                with open(CONSUMERS_YAML, "w") as f:
+                    yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+                print(f"  [registry] Added {company} to existing entry for {repo}")
+            else:
+                print(f"  [registry] {repo} → {company} already registered — skipping")
+            return
+
+    new_entry = f"\n  - repo: {repo}\n    companies:\n      - {company}\n"
+    CONSUMERS_YAML.write_text(raw + new_entry if raw.endswith("\n") else raw + "\n" + new_entry)
+    print(f"  [registry] Registered {repo} → {company}")

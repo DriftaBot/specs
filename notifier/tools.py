@@ -17,7 +17,7 @@ from typing import Annotated, Any
 import httpx
 from langchain_core.tools import tool
 
-from crawler.config import REPO_ROOT, load_consumer_registry, load_registry
+from crawler.config import REPO_ROOT, load_consumer_registry, load_registry, register_consumer
 
 GITHUB_API = "https://api.github.com"
 _MAX_CONSUMER_REPOS = 20     # cap per company to stay within rate limits
@@ -34,6 +34,39 @@ _search_timestamps: list[float] = []
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
+
+_MIN_CONSUMER_STARS = 100  # minimum stars for dynamically-discovered repos
+
+
+def _repo_stars(repo: str) -> int:
+    """Return the star count for a GitHub repo (0 on error)."""
+    try:
+        return _get(f"{GITHUB_API}/repos/{repo}").get("stargazers_count", 0)
+    except Exception:
+        return 0
+
+
+def log_issue(repo: str, url: str, title: str, company: str, status: str) -> None:
+    """Write an issue record to companies/consumers/<owner>/<repo>/issues/<number>.json."""
+    try:
+        issue_number = url.rstrip("/").split("/")[-1]
+        owner, repo_name = repo.split("/", 1)
+        issues_dir = REPO_ROOT / "companies" / "consumers" / owner / repo_name / "issues"
+        issues_dir.mkdir(parents=True, exist_ok=True)
+        record = {
+            "url": url,
+            "title": title,
+            "company": company,
+            "status": status,
+            "created_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        }
+        (issues_dir / f"{issue_number}.json").write_text(
+            json.dumps(record, indent=2) + "\n"
+        )
+        print(f"  [logged]  companies/consumers/{owner}/{repo_name}/issues/{issue_number}.json")
+    except Exception as exc:
+        print(f"  [log error] {exc}")
+
 
 def _throttle_search() -> None:
     """Block until a Code Search request is within the rate limit budget."""
@@ -275,6 +308,8 @@ def search_consumer_repos_plain(company_name: str) -> list[dict]:
                 repo = item.get("repository", {})
                 full_name = repo.get("full_name", "")
                 if full_name and full_name not in seen:
+                    if _repo_stars(full_name) < _MIN_CONSUMER_STARS:
+                        continue
                     seen.add(full_name)
                     repos.append({
                         "full_name": full_name,

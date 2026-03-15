@@ -1,4 +1,4 @@
-.PHONY: notify notify-agent check-consumer raise-issue add-consumer discover-consumers
+.PHONY: notify notify-agent check-consumer raise-issue add-consumer
 
 ## notify: run the deterministic consumer notifier (no LLM, no API cost)
 ##
@@ -25,17 +25,6 @@ check-consumer:
 	@test -n "$(REPO)"    || (echo "Usage: make check-consumer REPO=owner/repo COMPANY=stripe"; exit 1)
 	@test -n "$(COMPANY)" || (echo "Usage: make check-consumer REPO=owner/repo COMPANY=stripe"; exit 1)
 	GITHUB_TOKEN=$${GITHUB_TOKEN} $(PYTHON) -m checker --repo $(REPO) --company $(COMPANY)
-
-## discover-consumers: auto-discover new consumer repos via Code Search, check them, register, raise issues
-##
-## Usage:
-##   make discover-consumers              # all companies
-##   make discover-consumers COMPANY=stripe
-##
-discover-consumers:
-	GITHUB_TOKEN=$${GITHUB_TOKEN} ANTHROPIC_API_KEY=$${ANTHROPIC_API_KEY} \
-	  DRIFTABOT_TOKEN=$${DRIFTABOT_TOKEN} \
-	  $(PYTHON) -m checker --discover $(if $(COMPANY),--company $(COMPANY),)
 
 ## add-consumer: check a repo, register it in consumer.companies.yaml, and open an issue if problems found
 ##

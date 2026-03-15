@@ -15,8 +15,8 @@ import sys
 
 from pydantic import BaseModel
 
-from crawler.config import REPO_ROOT, load_registry
-from notifier.tools import GITHUB_API, _get, _throttle_search
+from crawler.config import REPO_ROOT, load_registry, register_consumer
+from notifier.tools import GITHUB_API, _get, _throttle_search, log_issue
 
 
 def _load_spec(company: str) -> tuple[dict, str]:
@@ -400,148 +400,20 @@ def _raise_github_issue(
         print(f"  [error]         {result.get('error')}")
         return
 
-    url = result.get("url", "")
-    if url:
-        _log_issue(repo, url, title, display, result["status"])
-
-
-def _log_issue(repo: str, url: str, title: str, company: str, status: str) -> None:
-    """Write an issue record to companies/consumers/<owner>/<repo>/issues/<number>.json."""
-    import json
-    from datetime import datetime, timezone
-
-    try:
-        issue_number = url.rstrip("/").split("/")[-1]
-        owner, repo_name = repo.split("/", 1)
-        issues_dir = REPO_ROOT / "companies" / "consumers" / owner / repo_name / "issues"
-        issues_dir.mkdir(parents=True, exist_ok=True)
-        record = {
-            "url": url,
-            "title": title,
-            "company": company,
-            "status": status,
-            "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        }
-        (issues_dir / f"{issue_number}.json").write_text(
-            json.dumps(record, indent=2) + "\n"
-        )
-        print(f"  [logged]        companies/consumers/{owner}/{repo_name}/issues/{issue_number}.json")
-    except Exception as exc:
-        print(f"  [log error]     {exc}")
-
-
-def _register_consumer(repo: str, company: str) -> None:
-    """Add repo/company to consumer.companies.yaml if not already present."""
-    import yaml
-    from crawler.config import CONSUMERS_YAML
-
-    if CONSUMERS_YAML.exists():
-        with open(CONSUMERS_YAML) as f:
-            data = yaml.safe_load(f) or {}
-        raw = CONSUMERS_YAML.read_text()
-    else:
-        data = {}
-        raw = ""
-
-    consumers = data.get("consumers", [])
-    for entry in consumers:
-        if entry.get("repo") == repo:
-            if company not in entry.get("companies", []):
-                entry["companies"].append(company)
-                print(f"  [registry] Added {company} to existing entry for {repo}")
-                with open(CONSUMERS_YAML, "w") as f:
-                    yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
-            else:
-                print(f"  [registry] {repo} → {company} already registered — skipping")
-            return
-
-    # Append new entry preserving existing file content and comments
-    new_entry = f"\n  - repo: {repo}\n    companies:\n      - {company}\n"
-    if raw.endswith("\n"):
-        CONSUMERS_YAML.write_text(raw + new_entry)
-    else:
-        CONSUMERS_YAML.write_text(raw + "\n" + new_entry)
-    print(f"  [registry] Registered {repo} → {company}")
-
-
-def _repo_stars(repo: str) -> int:
-    """Return the star count for a GitHub repo."""
-    try:
-        return _get(f"{GITHUB_API}/repos/{repo}").get("stargazers_count", 0)
-    except Exception:
-        return 0
-
-
-def discover(company: str | None = None) -> None:
-    """
-    Discover new consumer repos via GitHub Code Search, filter by stars,
-    run the checker, register in consumer.companies.yaml, and raise issues.
-    """
-    from crawler.config import load_registry, load_consumer_registry
-
-    registry = load_registry()
-    companies = [c for c in registry.companies if company is None or c.name == company]
-    if not companies:
-        print(f"Company '{company}' not found in provider.companies.yaml")
-        sys.exit(1)
-
-    known = {e.repo for e in load_consumer_registry().consumers}
-
-    for cfg in companies:
-        if not cfg.consumers:
-            print(f"\n[{cfg.display_name}] No consumer search queries defined — skipping")
-            continue
-
-        print(f"\nDiscovering consumers for {cfg.display_name}...")
-        found: set[str] = set()
-        for q in cfg.consumers:
-            _throttle_search()
-            try:
-                data = _get(
-                    f"{GITHUB_API}/search/code",
-                    params={"q": q.query, "per_page": 10},
-                )
-                for item in data.get("items", []):
-                    found.add(item["repository"]["full_name"])
-            except Exception as exc:
-                print(f"  [search error] {q.query!r}: {exc}")
-
-        candidates = sorted(found - known)
-        print(f"  {len(found)} repo(s) found, {len(candidates)} not yet registered")
-
-        for repo in candidates:
-            stars = _repo_stars(repo)
-            if stars < 100:
-                print(f"  [skip] {repo} ({stars} stars < 100)")
-                continue
-
-            print(f"\n  Checking {repo} ({stars} stars)...")
-            try:
-                check(repo, cfg.name, raise_issue=True)
-            except SystemExit:
-                pass  # check() exits with 1 when issues found — that's expected
-
-            _register_consumer(repo, cfg.name)
-            known.add(repo)
+    if result.get("url"):
+        log_issue(repo, result["url"], title, display, result["status"])
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Check a repo against a company API spec.")
-    parser.add_argument("--repo", help="GitHub repo, e.g. spree/spree_stripe")
-    parser.add_argument("--company", help="Company name, e.g. stripe")
+    parser.add_argument("--repo", required=True, help="GitHub repo, e.g. spree/spree_stripe")
+    parser.add_argument("--company", required=True, help="Company name, e.g. stripe")
     parser.add_argument("--raise-issue", action="store_true", help="Open a GitHub issue if problems are found")
     parser.add_argument("--add-consumer", action="store_true", help="Register repo in consumer.companies.yaml")
-    parser.add_argument("--discover", action="store_true", help="Auto-discover new consumer repos via Code Search")
     args = parser.parse_args()
-
-    if args.discover:
-        discover(args.company)
-    else:
-        if not args.repo or not args.company:
-            parser.error("--repo and --company are required unless --discover is used")
-        check(args.repo, args.company, raise_issue=args.raise_issue)
-        if args.add_consumer:
-            _register_consumer(args.repo, args.company)
+    check(args.repo, args.company, raise_issue=args.raise_issue)
+    if args.add_consumer:
+        register_consumer(args.repo, args.company)
 
 
 if __name__ == "__main__":
