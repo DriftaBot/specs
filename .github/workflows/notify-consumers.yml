@@ -52,11 +52,11 @@ jobs:
 
       - name: Commit drift results
         env:
-          CRAWLER_PAT: ${{ secrets.CRAWLER_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name  "driftabot-agent"
-          git config user.email "driftabot-agent@users.noreply.github.com"
-          git remote set-url origin "https://x-access-token:${CRAWLER_PAT}@github.com/DriftaBot/registry.git"
+          git config user.name  "driftabot-crawler[bot]"
+          git config user.email "crawler@driftabot.dev"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/DriftaBot/registry.git"
           git add companies/providers/*/drift/
           git diff --cached --quiet && echo "No drift results to commit." || \
             git commit -m "chore: log drift detection results [skip ci]" && git pull --rebase && git push
