@@ -19,3 +19,7 @@ consumers:
   - repo: ansible-collections/community.general
     companies:
       - sendgrid
+
+  - repo: auth0/rules
+    companies:
+      - sendgrid

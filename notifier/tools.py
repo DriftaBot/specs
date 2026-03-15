@@ -364,7 +364,7 @@ def create_issue_plain(repo_full_name: str, title: str, body: str) -> dict:
         resp = client.post(
             f"{GITHUB_API}/repos/{repo_full_name}/issues",
             headers=_github_headers(token),
-            json={"title": title, "body": body, "labels": ["api-breaking-change"]},
+            json={"title": title, "body": body},
         )
     if resp.status_code == 201:
         return {"status": "created", "url": resp.json()["html_url"], "error": None}
