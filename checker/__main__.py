@@ -400,13 +400,50 @@ def _raise_github_issue(
         print(f"  [error]         {result.get('error')}")
 
 
+def _register_consumer(repo: str, company: str) -> None:
+    """Add repo/company to consumer.companies.yaml if not already present."""
+    import yaml
+    from crawler.config import CONSUMERS_YAML
+
+    if CONSUMERS_YAML.exists():
+        with open(CONSUMERS_YAML) as f:
+            data = yaml.safe_load(f) or {}
+        raw = CONSUMERS_YAML.read_text()
+    else:
+        data = {}
+        raw = ""
+
+    consumers = data.get("consumers", [])
+    for entry in consumers:
+        if entry.get("repo") == repo:
+            if company not in entry.get("companies", []):
+                entry["companies"].append(company)
+                print(f"  [registry] Added {company} to existing entry for {repo}")
+                with open(CONSUMERS_YAML, "w") as f:
+                    yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+            else:
+                print(f"  [registry] {repo} → {company} already registered — skipping")
+            return
+
+    # Append new entry preserving existing file content and comments
+    new_entry = f"\n  - repo: {repo}\n    companies:\n      - {company}\n"
+    if raw.endswith("\n"):
+        CONSUMERS_YAML.write_text(raw + new_entry)
+    else:
+        CONSUMERS_YAML.write_text(raw + "\n" + new_entry)
+    print(f"  [registry] Registered {repo} → {company}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Check a repo against a company API spec.")
     parser.add_argument("--repo", required=True, help="GitHub repo, e.g. spree/spree_stripe")
     parser.add_argument("--company", required=True, help="Company name, e.g. stripe")
     parser.add_argument("--raise-issue", action="store_true", help="Open a GitHub issue if problems are found")
+    parser.add_argument("--add-consumer", action="store_true", help="Register repo in consumer.companies.yaml")
     args = parser.parse_args()
     check(args.repo, args.company, raise_issue=args.raise_issue)
+    if args.add_consumer:
+        _register_consumer(args.repo, args.company)
 
 
 if __name__ == "__main__":
