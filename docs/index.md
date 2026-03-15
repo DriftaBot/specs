@@ -9,11 +9,11 @@ hero:
     - theme: brand
       text: How It Works
       link: /how-it-works
-    - theme: alt
+    - theme: brand
       text: Add a Provider
       link: /providers
-    - theme: alt
-      text: Register for Notifications
+    - theme: brand
+      text: Add a Consumer
       link: /consumers
 
 features:
