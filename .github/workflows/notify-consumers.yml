@@ -38,7 +38,7 @@ jobs:
             "https://github.com/DriftaBot/engine/releases/download/v${DRIFTABOT_ENGINE_VERSION}/driftabot_linux_amd64.tar.gz" \
             | tar -xz -C /usr/local/bin driftabot
           chmod +x /usr/local/bin/driftabot
-          driftabot --version
+          driftabot help
 
       - name: Run consumer notifier
         env:
