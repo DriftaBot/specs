@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 REPO_ROOT = Path(__file__).parent.parent
 COMPANIES_YAML = REPO_ROOT / "companies.yaml"
+CONSUMERS_YAML = REPO_ROOT / "consumers.yaml"
 
 
 class SpecConfig(BaseModel):
@@ -32,7 +33,25 @@ class CompaniesRegistry(BaseModel):
     companies: List[CompanyConfig]
 
 
+class RegisteredConsumer(BaseModel):
+    repo: str                       # "owner/repo"
+    companies: List[str]            # company names from companies.yaml
+    contact: Optional[str] = None   # optional contact email
+
+
+class ConsumerRegistry(BaseModel):
+    consumers: List[RegisteredConsumer] = []
+
+
 def load_registry() -> CompaniesRegistry:
     with open(COMPANIES_YAML) as f:
         data = yaml.safe_load(f)
     return CompaniesRegistry.model_validate(data)
+
+
+def load_consumer_registry() -> ConsumerRegistry:
+    if not CONSUMERS_YAML.exists():
+        return ConsumerRegistry()
+    with open(CONSUMERS_YAML) as f:
+        data = yaml.safe_load(f) or {}
+    return ConsumerRegistry.model_validate(data)

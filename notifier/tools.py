@@ -16,7 +16,7 @@ from typing import Annotated, Any
 import httpx
 from langchain_core.tools import tool
 
-from crawler.config import REPO_ROOT, load_registry
+from crawler.config import REPO_ROOT, load_consumer_registry, load_registry
 
 GITHUB_API = "https://api.github.com"
 _MAX_CONSUMER_REPOS = 20     # cap per company to stay within rate limits
@@ -190,19 +190,37 @@ def detect_breaking_changes_plain(company: str, spec_type: str, changed_path: st
 
 def search_consumer_repos_plain(company_name: str) -> list[dict]:
     """
-    Use GitHub Code Search to find public repos importing this company's client libraries.
-    Capped at _MAX_CONSUMER_REPOS per company.
+    Return repos to notify for a given company.
+
+    Always includes repos registered in consumers.yaml (opt-in, no cap).
+    Then appends dynamically discovered repos via GitHub Code Search (capped
+    at _MAX_CONSUMER_REPOS additional repos beyond the registered set).
     """
+    # 1. Registered consumers — always included, not subject to the search cap
+    consumer_registry = load_consumer_registry()
+    registered = [
+        {
+            "full_name": c.repo,
+            "description": "(registered consumer)",
+            "html_url": f"https://github.com/{c.repo}",
+            "registered": True,
+        }
+        for c in consumer_registry.consumers
+        if company_name in c.companies
+    ]
+
+    seen: set[str] = {r["full_name"] for r in registered}
+    repos: list[dict] = list(registered)
+
+    # 2. Dynamic discovery via Code Search — up to _MAX_CONSUMER_REPOS additional
     registry = load_registry()
     company = next((c for c in registry.companies if c.name == company_name), None)
     if not company or not company.consumers:
-        return []
+        return repos
 
-    seen: set[str] = set()
-    repos: list[dict] = []
-
+    discovery_cap = len(registered) + _MAX_CONSUMER_REPOS
     for consumer in company.consumers:
-        if len(repos) >= _MAX_CONSUMER_REPOS:
+        if len(repos) >= discovery_cap:
             break
         _throttle_search()
         try:
@@ -219,8 +237,9 @@ def search_consumer_repos_plain(company_name: str) -> list[dict]:
                         "full_name": full_name,
                         "description": repo.get("description", ""),
                         "html_url": repo.get("html_url", ""),
+                        "registered": False,
                     })
-                    if len(repos) >= _MAX_CONSUMER_REPOS:
+                    if len(repos) >= discovery_cap:
                         break
         except Exception:
             continue
