@@ -55,6 +55,15 @@ Examples:
 5. Repos registered in [consumer.companies.yaml](consumer.companies.yaml) are always notified (opt-in, no cap).
 6. A GitHub issue is opened in each affected repo by the [@driftabot-agent](https://github.com/driftabot-agent) account.
 
+The notifier runs in one of two modes depending on whether `ANTHROPIC_API_KEY` is set:
+
+| Mode | Trigger | How |
+|------|---------|-----|
+| **LangGraph agent** | `ANTHROPIC_API_KEY` is set | Claude ReAct agent orchestrates the workflow via tools |
+| **Deterministic** | no `ANTHROPIC_API_KEY` | Plain Python runner — same logic, no LLM, no API cost |
+
+In CI, `ANTHROPIC_API_KEY` is always passed so the agent runs. Locally, `make notify` uses the deterministic path; `make notify-agent` uses the LangGraph agent.
+
 ### Drift Result Format
 
 ```json
