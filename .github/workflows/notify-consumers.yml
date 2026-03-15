@@ -1,13 +1,7 @@
 name: Notify API Consumers
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'companies/**'
-      - '!companies/providers/*/drift/**'   # ignore drift result commits (avoid loop)
-      - '!companies/consumers/**'           # ignore consumer issue logs (avoid loop)
-  workflow_dispatch:       # manual trigger for testing
+  workflow_dispatch:
 
 permissions:
   contents: write          # write drift result files back to repo
