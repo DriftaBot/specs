@@ -6,7 +6,7 @@
 ##   make crawl
 ##
 crawl:
-	GITHUB_TOKEN=$${GITHUB_TOKEN} python -m crawler
+	GITHUB_TOKEN=$${GITHUB_TOKEN} $(PYTHON) -m crawler
 
 ## crawl-agent: run the LangGraph agent crawler (requires ANTHROPIC_API_KEY)
 ##
@@ -14,4 +14,4 @@ crawl:
 ##   make crawl-agent
 ##
 crawl-agent:
-	GITHUB_TOKEN=$${GITHUB_TOKEN} ANTHROPIC_API_KEY=$${ANTHROPIC_API_KEY} python -m crawler
+	GITHUB_TOKEN=$${GITHUB_TOKEN} ANTHROPIC_API_KEY=$${ANTHROPIC_API_KEY} $(PYTHON) -m crawler
