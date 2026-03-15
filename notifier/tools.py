@@ -43,24 +43,48 @@ def _repo_stars(repo: str) -> int:
         return 0
 
 
+def _consumer_log_path(result: str, company: str, repo: str) -> Any:
+    """Return path: companies/consumers/{result}/{company}/{owner}/{repo_name}.json"""
+    owner, repo_name = repo.split("/", 1)
+    company_slug = company.lower()
+    log_dir = REPO_ROOT / "companies" / "consumers" / result / company_slug / owner
+    log_dir.mkdir(parents=True, exist_ok=True)
+    return log_dir / f"{repo_name}.json"
+
+
 def log_issue(repo: str, url: str, title: str, company: str, status: str) -> None:
-    """Write an issue record to companies/consumers/<owner>/<repo>/issues/<number>.json."""
+    """Write a fail record to companies/consumers/fail/<company>/<owner>/<repo>.json."""
     try:
-        issue_number = url.rstrip("/").split("/")[-1]
-        owner, repo_name = repo.split("/", 1)
-        issues_dir = REPO_ROOT / "companies" / "consumers" / owner / repo_name / "issues"
-        issues_dir.mkdir(parents=True, exist_ok=True)
         record = {
-            "url": url,
+            "repo": repo,
+            "url": f"https://github.com/{repo}",
+            "issue_url": url,
             "title": title,
             "company": company,
             "status": status,
-            "created_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "checked_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
         }
-        (issues_dir / f"{issue_number}.json").write_text(
-            json.dumps(record, indent=2) + "\n"
-        )
-        print(f"  [logged]  companies/consumers/{owner}/{repo_name}/issues/{issue_number}.json")
+        path = _consumer_log_path("fail", company, repo)
+        path.write_text(json.dumps(record, indent=2) + "\n")
+        print(f"  [logged]  {path.relative_to(REPO_ROOT)}")
+    except Exception as exc:
+        print(f"  [log error] {exc}")
+
+
+def log_check_passed(repo: str, company: str) -> None:
+    """Write a pass record to companies/consumers/pass/<company>/<owner>/<repo>.json."""
+    try:
+        record = {
+            "repo": repo,
+            "url": f"https://github.com/{repo}",
+            "company": company,
+            "status": "passed",
+            "message": "No issues found with API",
+            "checked_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        }
+        path = _consumer_log_path("pass", company, repo)
+        path.write_text(json.dumps(record, indent=2) + "\n")
+        print(f"  [logged]  {path.relative_to(REPO_ROOT)}")
     except Exception as exc:
         print(f"  [log error] {exc}")
 

@@ -252,6 +252,9 @@ def check(repo: str, company: str, raise_issue: bool = False) -> bool:
     total = data.get("total_count", 0)
     if total == 0:
         print(f"Result: No {display} API usage detected in {repo}.")
+        if raise_issue:
+            from notifier.tools import log_check_passed
+            log_check_passed(repo, display)
         return False
 
     file_paths = [item["path"] for item in data.get("items", [])]
@@ -299,6 +302,9 @@ def check(repo: str, company: str, raise_issue: bool = False) -> bool:
 
         if not confirmed_files:
             print(f"Result: No genuine {display} API usage detected in {repo}.")
+            if raise_issue:
+                from notifier.tools import log_check_passed
+                log_check_passed(repo, display)
             return False
 
     else:
@@ -361,8 +367,14 @@ def check(repo: str, company: str, raise_issue: bool = False) -> bool:
         return True
     elif not used:
         print(f"Result: No {display} API usage detected in {repo}.")
+        if raise_issue:
+            from notifier.tools import log_check_passed
+            log_check_passed(repo, display)
     else:
         print(f"Result: OK — {len(used)} resource(s) used, all current.")
+        if raise_issue:
+            from notifier.tools import log_check_passed
+            log_check_passed(repo, display)
     return False
 
 
