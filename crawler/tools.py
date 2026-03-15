@@ -101,6 +101,12 @@ def write_file(output_path: str, content: str) -> None:
 
 # ---------------------------------------------------------------------------
 # LangGraph @tool wrappers — used by the ReAct agent
+#
+# Design constraint: tools NEVER return spec file content back to the model.
+# Spec files can be megabytes each; returning them in tool messages would
+# exhaust the 1M token context window within a few companies. Instead, all
+# fetch+compare+write logic happens inside the tools and only small status
+# metadata is returned to the agent.
 # ---------------------------------------------------------------------------
 
 @tool
@@ -120,58 +126,39 @@ def list_repo_directory(
 ) -> str:
     """
     List files in a GitHub repository directory.
-    Returns a JSON array of objects with 'name', 'path', 'type', and 'sha' fields.
-    Only returns files (not subdirectories).
+    Returns a JSON array of objects with 'name' and 'path' fields only.
     On error returns a JSON object with an 'error' field.
     """
     try:
-        return json.dumps(list_dir(repo, path), indent=2)
+        files = list_dir(repo, path)
+        # Return only name+path — sha and type not needed by the agent
+        return json.dumps([{"name": f["name"], "path": f["path"]} for f in files])
     except Exception as exc:
         return json.dumps({"error": str(exc)})
 
 
 @tool
-def fetch_spec(
+def sync_spec(
     repo: Annotated[str, "GitHub repo in 'owner/repo' format"],
-    path: Annotated[str, "File path within the repo"],
+    repo_path: Annotated[str, "File path within the repo to fetch"],
+    output_path: Annotated[str, "Output file path relative to repo root (e.g. companies/stripe/openapi/stripe.openapi.json)"],
 ) -> str:
     """
-    Fetch a spec file from a GitHub repository.
-    Returns a JSON object with 'content' (raw file text) and 'sha' (GitHub blob SHA).
-    Large files (>1MB) are fetched via the raw download URL.
-    On error returns a JSON object with an 'error' field.
+    Fetch a spec file from GitHub and save it locally if it has changed.
+    Returns a JSON object with:
+      - status: "updated" | "unchanged" | "error"
+      - output_path: the local path written
+      - error: error message if status is "error", otherwise null
+    Spec content is NEVER included in the return value.
     """
     try:
-        content, sha = fetch_file(repo, path)
-        return json.dumps({"content": content, "sha": sha})
+        content, _ = fetch_file(repo, repo_path)
+        if content_sha256(content) == existing_sha256(output_path):
+            return json.dumps({"status": "unchanged", "output_path": output_path, "error": None})
+        write_file(output_path, content)
+        return json.dumps({"status": "updated", "output_path": output_path, "error": None})
     except Exception as exc:
-        return json.dumps({"error": str(exc)})
+        return json.dumps({"status": "error", "output_path": output_path, "error": str(exc)})
 
 
-@tool
-def get_existing_sha(
-    output_path: Annotated[str, "Output file path relative to repo root"],
-) -> str:
-    """
-    Read an existing local spec file and return its SHA-256 content hash.
-    Returns a JSON object with 'exists' (bool) and 'sha256' (hex string or null).
-    """
-    sha = existing_sha256(output_path)
-    return json.dumps({"exists": sha is not None, "sha256": sha})
-
-
-@tool
-def write_spec(
-    output_path: Annotated[str, "Output file path relative to repo root"],
-    content: Annotated[str, "File content to write"],
-) -> str:
-    """
-    Write spec content to the local filesystem.
-    Creates parent directories as needed.
-    Returns a JSON object with 'written' (bool) and 'path' (absolute path string).
-    """
-    write_file(output_path, content)
-    return json.dumps({"written": True, "path": str(REPO_ROOT / output_path)})
-
-
-ALL_TOOLS = [load_companies_config, list_repo_directory, fetch_spec, get_existing_sha, write_spec]
+ALL_TOOLS = [load_companies_config, list_repo_directory, sync_spec]

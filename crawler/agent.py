@@ -15,31 +15,23 @@ companies' public GitHub repositories.
 1. Call `load_companies_config` to get the list of all companies and their spec entries.
 
 2. For each company and each spec entry:
-   a. If the entry has a `path` field: call `fetch_spec(repo, path)` to get the file.
-   b. If the entry has a `path_pattern` field (a directory): call `list_repo_directory(repo, path_pattern)`
-      to enumerate all files in that directory, then fetch each one individually.
+   a. If the entry has a `path` and `output` field:
+      Call `sync_spec(repo=entry.repo, repo_path=entry.path, output_path=entry.output)`.
 
-3. For each fetched file:
-   - Determine the output path:
-     - If the spec entry has `output`: use that path directly.
-     - If the spec entry has `output_dir`: use `output_dir/<original_filename>`.
-   - Call `get_existing_sha(output_path)` to check if we already have this file locally.
-   - Compare the fetched content hash with the local hash:
-     - If they differ (or the file doesn't exist locally): call `write_spec(output_path, content)`.
-     - If they match: skip (file is already up-to-date).
+   b. If the entry has a `path_pattern` and `output_dir` field (fetch a whole directory):
+      - Call `list_repo_directory(repo=entry.repo, path=entry.path_pattern)` to get the file list.
+      - For each file, call `sync_spec(repo=entry.repo, repo_path=file.path, output_path=entry.output_dir + file.name)`.
 
-4. Continue processing ALL companies and specs even if one fails. Never abort early due to
-   a single error — catch it, note it, and move on.
+3. Continue processing ALL companies and specs even if one fails — never abort early.
 
-5. After processing everything, print a summary:
+4. After processing everything, print a summary:
    - How many specs were updated
    - How many were unchanged
    - How many errored (with company name and error message)
 
 ## Important rules
 - Only write files under the `companies/` directory.
-- Preserve the original file content exactly — do not modify or reformat specs.
-- Be efficient: skip files that haven't changed.
+- Do not read or display spec file contents — `sync_spec` handles fetch+compare+write internally.
 """
 
 
