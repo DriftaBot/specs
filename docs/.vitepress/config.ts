@@ -8,6 +8,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/how-it-works' },
+      { text: 'Status', link: '/status' },
       { text: 'Agent ↗', link: 'https://github.com/marketplace/actions/driftabot-agent', target: '_blank' },
       { text: 'GitHub', link: 'https://github.com/DriftaBot/registry' },
     ],
@@ -17,6 +18,7 @@ export default defineConfig({
         text: 'Overview',
         items: [
           { text: 'How It Works', link: '/how-it-works' },
+          { text: 'Registry Status', link: '/status' },
         ],
       },
       {
