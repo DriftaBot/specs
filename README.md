@@ -9,26 +9,30 @@ Specs are automatically fetched every 6 hours from their canonical public GitHub
 ```
 companies/
 └── providers/
-    ├── stripe/openapi/         OpenAPI 3.0
-    ├── twilio/openapi/         OpenAPI 3.0 (all service specs)
-    ├── github/openapi/         OpenAPI 3.0/3.1
-    ├── slack/openapi/          OpenAPI 2.0
-    ├── sendgrid/openapi/       OpenAPI 3.0
-    ├── digitalocean/openapi/   OpenAPI 3.0
-    ├── netlify/openapi/        OpenAPI 2.0
-    ├── pagerduty/openapi/      OpenAPI 3.0
-    ├── shopify/graphql/        GraphQL SDL
-    └── google/grpc/            gRPC / Protobuf
+    ├── stripe/
+    │   ├── openapi/        OpenAPI 3.0
+    │   └── drift/          Breaking change logs (auto-generated)
+    ├── twilio/openapi/     OpenAPI 3.0 (all service specs)
+    ├── github/openapi/     OpenAPI 3.0/3.1
+    ├── slack/openapi/      OpenAPI 2.0
+    ├── sendgrid/openapi/   OpenAPI 3.0
+    ├── digitalocean/openapi/ OpenAPI 3.0
+    ├── netlify/openapi/    OpenAPI 2.0
+    ├── pagerduty/openapi/  OpenAPI 3.0
+    ├── shopify/graphql/    GraphQL SDL
+    └── google/grpc/        gRPC / Protobuf
 ```
 
 ## File Naming
 
 ```
 companies/providers/<company>/<spec_type>/<filename>.<spec_type>.<ext>
+companies/providers/<company>/drift/result_<spec_type>_<YYYYMMDD_HHMMSS>.json
 ```
 
 Examples:
 - `companies/providers/stripe/openapi/stripe.openapi.json`
+- `companies/providers/stripe/drift/result_openapi_20260315_040000.json`
 - `companies/providers/shopify/graphql/shopify_admin.graphql`
 - `companies/providers/google/grpc/pubsub_v1/pubsub.proto`
 
@@ -44,11 +48,30 @@ Examples:
 
 ### Consumer Notifier (on spec update)
 
-1. After every commit that updates files under `companies/providers/`, the [notify-consumers workflow](.github/workflows/notify-consumers.yml) triggers automatically.
+1. After every commit that updates files under `companies/providers/` (excluding `drift/`), the [notify-consumers workflow](.github/workflows/notify-consumers.yml) triggers automatically.
 2. The [driftabot/engine](https://github.com/DriftaBot/engine) CLI compares old vs new specs to detect breaking changes.
-3. GitHub Code Search finds public repositories that import the affected company's client libraries.
-4. Repos registered in [consumer.companies.yaml](consumer.companies.yaml) are always notified (opt-in, no cap).
-5. A GitHub issue is opened in each affected repo by the [@driftabot-agent](https://github.com/driftabot-agent) account.
+3. Drift results are written to `companies/providers/<company>/drift/` — one JSON file per run, sorted newest-first by filename.
+4. GitHub Code Search finds public repositories that import the affected company's client libraries.
+5. Repos registered in [consumer.companies.yaml](consumer.companies.yaml) are always notified (opt-in, no cap).
+6. A GitHub issue is opened in each affected repo by the [@driftabot-agent](https://github.com/driftabot-agent) account.
+
+### Drift Result Format
+
+```json
+{
+  "detected_at": "2026-03-15T04:00:00",
+  "company": "stripe",
+  "spec_type": "openapi",
+  "spec_path": "companies/providers/stripe/openapi/stripe.openapi.json",
+  "summary": { "breaking": 2, "non_breaking": 1, "info": 0 },
+  "changes": [
+    { "severity": "breaking", "type": "field_removed", "path": "/v1/customers", ... },
+    ...
+  ]
+}
+```
+
+Changes are sorted breaking → non_breaking → info. List newest results first with `ls -r companies/providers/<company>/drift/`.
 
 ## Adding a New API Provider
 
@@ -87,19 +110,36 @@ Registered repos are always notified — they bypass the dynamic search cap and 
 
 ## Running Locally
 
+Copy `.env.example` to `.env` and fill in your tokens. All `make` commands load `.env` automatically.
+
 ```bash
 # Install dependencies
 pip install -e .
 
-# Run the crawler (deterministic mode, no LLM cost)
-GITHUB_TOKEN=ghp_xxx python -m crawler
+# Run the crawler (deterministic, no LLM cost)
+make crawl
 
-# Run the crawler with the LangGraph agent
-GITHUB_TOKEN=ghp_xxx ANTHROPIC_API_KEY=sk-ant-xxx python -m crawler
+# Run the crawler with the LangGraph agent (requires ANTHROPIC_API_KEY)
+make crawl-agent
 
 # Run the consumer notifier
-GITHUB_TOKEN=ghp_xxx DRIFTABOT_TOKEN=ghp_yyy python -m notifier
+make notify
+
+# Run the notifier with the LangGraph agent
+make notify-agent
+
+# Check if a repo uses deprecated or removed API endpoints
+make check-consumer REPO=spree/spree_stripe COMPANY=stripe
 ```
+
+### Generating a GITHUB_TOKEN
+
+```bash
+# Fastest — reuse your existing gh CLI session:
+gh auth token
+```
+
+Or create a fine-grained PAT at **GitHub → Settings → Developer settings → Personal access tokens** with `Contents: Read` on public repositories.
 
 ## GitHub Policy Compliance
 
@@ -110,8 +150,8 @@ GITHUB_TOKEN=ghp_xxx DRIFTABOT_TOKEN=ghp_yyy python -m notifier
 
 ## Secrets Required
 
-| Secret | Description |
-|--------|-------------|
-| `GITHUB_TOKEN` | Auto-provided by GitHub Actions. Used to call the GitHub REST API and commit spec updates. |
-| `ANTHROPIC_API_KEY` | Powers the LangGraph crawler agent (Claude). Only used once per day at midnight UTC. |
-| `DRIFTABOT_TOKEN` | PAT for the [@driftabot-agent](https://github.com/driftabot-agent) GitHub account (`public_repo` scope). Used to create issues in consumer repos. |
+| Secret | Used by | Description |
+|--------|---------|-------------|
+| `GITHUB_TOKEN` | Crawler, Notifier | Auto-provided by GitHub Actions. Read specs, commit updates, Code Search. |
+| `ANTHROPIC_API_KEY` | Crawler, Notifier | Powers the LangGraph agent (Claude). Crawler uses it once per day at midnight UTC. |
+| `DRIFTABOT_TOKEN` | Notifier | PAT for the [@driftabot-agent](https://github.com/driftabot-agent) account (`public_repo` scope). Creates issues in consumer repos. |
