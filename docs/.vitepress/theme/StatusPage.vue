@@ -33,14 +33,18 @@
         <span class="sp-count-title">{{ filteredProviders.length }}</span>
       </h2>
       <div v-if="filteredProviders.length" class="sp-provider-grid">
-        <div
+        <component
+          :is="p.githubUrl ? 'a' : 'div'"
           v-for="p in filteredProviders"
           :key="p.name"
+          :href="p.githubUrl ?? undefined"
+          :target="p.githubUrl ? '_blank' : undefined"
+          :rel="p.githubUrl ? 'noopener' : undefined"
           class="sp-provider-card"
         >
-          <span class="sp-provider-name">{{ p.name }}</span>
+          <span class="sp-provider-name">{{ p.displayName }}</span>
           <span :class="['sp-badge', 'sp-badge--' + p.specType]">{{ p.specType }}</span>
-        </div>
+        </component>
       </div>
       <p v-else class="sp-empty">No providers match your search.</p>
     </section>
@@ -268,6 +272,13 @@ function issueNum(url: string): string {
   border-radius: 8px;
   background: var(--vp-c-bg-soft);
   gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, background 0.2s;
+}
+a.sp-provider-card:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg-elv);
 }
 .sp-provider-name {
   font-size: 0.85rem;
