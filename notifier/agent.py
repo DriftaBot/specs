@@ -66,11 +66,33 @@ those APIs by creating clear, actionable GitHub issues.
 2. Check the <Company> API changelog for migration guidance.
 
 ---
-*Created by [DriftaBot](https://github.com/DriftaBot/registry) · If this is a false positive, close the issue.*
+*Opened by [DriftaBot](https://github.com/DriftaBot/registry)*
 ```
 
 Use `commit_sha` and `path` from the `get_changed_specs` result to build the spec link.
 Omit the Spec line if `commit_sha` is empty.
+
+### Ecosystem-specific bot fields
+
+Some repos have automated bots that require specific sections in the issue body.
+Append the following **after** the footer when the repo org is `ansible-collections`,
+`ansible`, or `ansible-community`. Derive `<component>` from the matched file path:
+for `plugins/modules/sendgrid.py` the component is `sendgrid`; use the filename
+without extension of the deepest plugin file, or the basename of the first matched file.
+
+```
+
+---
+
+##### ISSUE TYPE
+- Bug Report
+
+##### COMPONENT NAME
+<component>
+
+##### ANSIBLE VERSION
+N/A — this is an upstream API compatibility issue, not Ansible version-specific
+```
 
 ## Important rules
 - Process ALL companies with breaking changes, even if some fail — never abort early.

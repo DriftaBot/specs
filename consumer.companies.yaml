@@ -15,3 +15,7 @@ consumers:
   - repo: spree/spree_stripe
     companies:
       - stripe
+
+  - repo: ansible-collections/community.general
+    companies:
+      - sendgrid

@@ -1,8 +1,9 @@
 [project]
 name = "driftabot-registry-crawler"
-version = "0.1.0"
+version = "0.2.0"
 requires-python = ">=3.12"
 dependencies = [
+    "anthropic>=0.40",
     "langgraph>=0.2",
     "langchain-anthropic>=0.3",
     "httpx>=0.27",
@@ -19,4 +20,4 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["crawler*", "notifier*"]
+include = ["checker*", "crawler*", "notifier*"]

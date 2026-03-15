@@ -14,6 +14,38 @@ from notifier.tools import (
 )
 
 
+_ANSIBLE_ORGS = {"ansible-collections", "ansible", "ansible-community"}
+
+
+def _ansible_component(matched_files: list[str]) -> str:
+    """Extract Ansible component name from matched file paths."""
+    plugin_dirs = {"modules", "lookup", "filter", "callback", "connection", "inventory", "vars"}
+    for f in matched_files:
+        parts = f.replace("\\", "/").split("/")
+        if len(parts) >= 2 and parts[-2] in plugin_dirs:
+            return parts[-1].removesuffix(".py")
+    if matched_files:
+        return matched_files[0].split("/")[-1].rsplit(".", 1)[0]
+    return "unknown"
+
+
+def _ecosystem_suffix(repo_full_name: str, matched_files: list[str]) -> str:
+    """Return ecosystem-specific bot fields to append to the issue body."""
+    org = repo_full_name.split("/")[0].lower()
+    if org in _ANSIBLE_ORGS:
+        component = _ansible_component(matched_files)
+        return (
+            "\n\n---\n\n"
+            "##### ISSUE TYPE\n"
+            "- Bug Report\n\n"
+            "##### COMPONENT NAME\n"
+            f"{component}\n\n"
+            "##### ANSIBLE VERSION\n"
+            "N/A — this is an upstream API compatibility issue, not Ansible version-specific\n"
+        )
+    return ""
+
+
 def _issue_title(display_name: str, description: str) -> str:
     short = description[:80] + "..." if len(description) > 80 else description
     return f"[DriftaBot] Breaking change in {display_name} API: {short}"
@@ -26,6 +58,7 @@ def _issue_body(
     matched_files: list[str],
     spec_path: str = "",
     commit_sha: str = "",
+    repo_full_name: str = "",
 ) -> str:
     files_md = "\n".join(f"- `{f}`" for f in matched_files) or "_(no specific files identified)_"
     spec_link = ""
@@ -34,6 +67,7 @@ def _issue_body(
         spec_link = f"\n**Spec:** [{spec_path}]({url})\n"
     method = bc.get('method', '')
     path_str = f"`{bc.get('path', '')}`" + (f" `{method}`" if method else "")
+    suffix = _ecosystem_suffix(repo_full_name, matched_files)
     return f"""## Breaking API Change — {display_name} API
 
 **DriftaBot** detected a breaking change in the **{display_name}** API that may affect this repository.
@@ -56,8 +90,7 @@ def _issue_body(
 2. Check the {display_name} API changelog for migration guidance.
 
 ---
-*Created by [DriftaBot](https://github.com/DriftaBot/registry) · If this is a false positive, close the issue.*
-"""
+*Opened by [DriftaBot](https://github.com/DriftaBot/registry)*{suffix}"""
 
 
 def run() -> None:
@@ -126,7 +159,7 @@ def run() -> None:
 
                 # Phase 5: create issue
                 title = _issue_title(display, bc["description"])
-                body = _issue_body(display, spec_type, bc, usage["matched_files"], spec_path, commit_sha)
+                body = _issue_body(display, spec_type, bc, usage["matched_files"], spec_path, commit_sha, repo["full_name"])
                 result = create_issue_plain(repo["full_name"], title, body)
                 if result["status"] == "created":
                     total_created += 1
