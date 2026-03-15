@@ -216,12 +216,13 @@ def _build_issue(
     return title, body
 
 
-def check(repo: str, company: str, raise_issue: bool = False) -> None:
+def check(repo: str, company: str, raise_issue: bool = False) -> bool:
+    """Check repo against company spec. Returns True if issues were found."""
     registry = load_registry()
     company_cfg = next((c for c in registry.companies if c.name == company), None)
     if not company_cfg:
         print(f"Company '{company}' not found in provider.companies.yaml")
-        sys.exit(1)
+        return False
 
     spec, spec_path = _load_spec(company)
     resource_index = _build_resource_index(spec)
@@ -246,12 +247,12 @@ def check(repo: str, company: str, raise_issue: bool = False) -> None:
         )
     except Exception as exc:
         print(f"Search failed: {exc}")
-        sys.exit(1)
+        return False
 
     total = data.get("total_count", 0)
     if total == 0:
         print(f"Result: No {display} API usage detected in {repo}.")
-        return
+        return False
 
     file_paths = [item["path"] for item in data.get("items", [])]
     print(f"Found {total} file(s) mentioning '{company}', fetching top {len(file_paths)}...")
@@ -298,7 +299,7 @@ def check(repo: str, company: str, raise_issue: bool = False) -> None:
 
         if not confirmed_files:
             print(f"Result: No genuine {display} API usage detected in {repo}.")
-            return
+            return False
 
     else:
         # ── Step 3b: lexical substring matching (fallback) ────────────────────
@@ -357,11 +358,12 @@ def check(repo: str, company: str, raise_issue: bool = False) -> None:
         if raise_issue:
             _raise_github_issue(repo, display, spec_path, used, issues_removed)
 
-        sys.exit(1)
+        return True
     elif not used:
         print(f"Result: No {display} API usage detected in {repo}.")
     else:
         print(f"Result: OK — {len(used)} resource(s) used, all current.")
+    return False
 
 
 def _raise_github_issue(
@@ -411,9 +413,11 @@ def main() -> None:
     parser.add_argument("--raise-issue", action="store_true", help="Open a GitHub issue if problems are found")
     parser.add_argument("--add-consumer", action="store_true", help="Register repo in consumer.companies.yaml")
     args = parser.parse_args()
-    check(args.repo, args.company, raise_issue=args.raise_issue)
+    issues_found = check(args.repo, args.company, raise_issue=args.raise_issue)
     if args.add_consumer:
         register_consumer(args.repo, args.company)
+    if issues_found:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

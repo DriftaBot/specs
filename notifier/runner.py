@@ -5,7 +5,8 @@ Implements the same 5-phase flow as the agent: detect changed specs, detect
 breaking changes, discover consumer repos, check usage, create issues.
 Used as the fallback when ANTHROPIC_API_KEY is not set.
 """
-from crawler.config import register_consumer
+from checker.__main__ import check as check_repo
+from crawler.config import load_registry, register_consumer
 from notifier.tools import (
     check_consumer_usage_plain,
     create_issue_plain,
@@ -95,7 +96,31 @@ def _issue_body(
 *Opened by [DriftaBot](https://github.com/DriftaBot/registry)*{suffix}"""
 
 
+def _discover_new_consumers() -> None:
+    """
+    For every company: find repos not yet in consumer.companies.yaml (≥100 stars),
+    check them against the current spec, and register + raise issue only if issues found.
+    """
+    registry = load_registry()
+    for cfg in registry.companies:
+        repos = search_consumer_repos_plain(cfg.name)
+        new_repos = [r for r in repos if not r["registered"]]
+        if not new_repos:
+            continue
+        print(f"\n[discover] {cfg.display_name}: {len(new_repos)} new candidate(s)")
+        for repo in new_repos:
+            print(f"  Checking {repo['full_name']}...")
+            issues_found = check_repo(repo["full_name"], cfg.name, raise_issue=True)
+            if issues_found:
+                register_consumer(repo["full_name"], cfg.name)
+            else:
+                print(f"  [skip] {repo['full_name']} — no issues detected")
+
+
 def run() -> None:
+    # Phase 0: discover and check new consumer repos across all companies
+    _discover_new_consumers()
+
     # Phase 1: detect changed specs
     changed = get_changed_specs_plain()
     if not changed:
@@ -173,8 +198,6 @@ def run() -> None:
                     print(f"  [error]         {repo['full_name']}: {result.get('error')}")
                     continue
 
-                if not repo["registered"]:
-                    register_consumer(repo["full_name"], company_name)
                 if result.get("url"):
                     log_issue(repo["full_name"], result["url"], title, company_name, result["status"])
 
