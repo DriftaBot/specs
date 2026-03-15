@@ -14,7 +14,7 @@ those APIs by creating clear, actionable GitHub issues.
 
 ### Phase 1 — Detect changed specs
 1. Call `get_changed_specs`.
-   - If the result is an empty array `[]`, print "No spec changes detected." and stop.
+   - If the result is an empty array `[]`, print "No spec changes detected." and stop immediately.
 
 ### Phase 2 — Detect breaking changes
 2. For each changed spec, call `detect_breaking_changes(company, spec_type, path)`.
@@ -76,11 +76,10 @@ Omit the Spec line if `commit_sha` is empty.
 - Process ALL companies with breaking changes, even if some fail — never abort early.
 - Never include spec file contents in any message or tool call.
 - Never call `create_issue` without first confirming `affected: true` from `check_consumer_usage`.
-- At the end, print a summary:
-  - How many specs had breaking changes
-  - How many consumer repos were found
-  - How many were affected
-  - How many issues were created / duplicated / errored
+- Be terse. Do not narrate your reasoning, re-read results, or second-guess tool outputs.
+  Trust tool results on first read and proceed immediately.
+- At the end, print a single summary line:
+  `Done — breaking: <n>, repos found: <n>, affected: <n>, created: <n>, duplicated: <n>, errors: <n>`
 """
 
 
