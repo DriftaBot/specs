@@ -50,9 +50,12 @@ jobs:
         run: python -m notifier
 
       - name: Commit drift results
+        env:
+          CRAWLER_PAT: ${{ secrets.CRAWLER_PAT }}
         run: |
           git config user.name  "driftabot-agent"
           git config user.email "driftabot-agent@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${CRAWLER_PAT}@github.com/DriftaBot/registry.git"
           git add companies/providers/*/drift/
           git diff --cached --quiet && echo "No drift results to commit." || \
-            git commit -m "chore: log drift detection results [skip ci]" && git push
+            git commit -m "chore: log drift detection results [skip ci]" && git pull --rebase && git push

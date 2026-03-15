@@ -60,6 +60,20 @@ def _build_resource_index(spec: dict) -> dict[str, dict]:
     return index
 
 
+def _fetch_file_contents(repo: str, file_paths: list[str]) -> dict[str, str]:
+    """Fetch raw content for a list of file paths in a repo. Returns {path: content}."""
+    contents: dict[str, str] = {}
+    for file_path in file_paths:
+        try:
+            data = _get(f"{GITHUB_API}/repos/{repo}/contents/{file_path}")
+            if isinstance(data, dict) and data.get("encoding") == "base64":
+                import base64
+                contents[file_path] = base64.b64decode(data["content"]).decode("utf-8", errors="replace")
+        except Exception:
+            pass
+    return contents
+
+
 def check(repo: str, company: str) -> None:
     registry = load_registry()
     company_cfg = next((c for c in registry.companies if c.name == company), None)
@@ -76,38 +90,53 @@ def check(repo: str, company: str) -> None:
     print(f"Resources : {len(resource_index)} endpoint groups in spec")
     print()
 
+    # ── Step 1: one broad search to find files mentioning the company ─────────
+    print(f"Searching for {display} usage in {repo}...")
+    _throttle_search()
+    try:
+        data = _get(
+            f"{GITHUB_API}/search/code",
+            params={"q": f'repo:{repo} "{company}"', "per_page": 10},
+        )
+    except Exception as exc:
+        print(f"Search failed: {exc}")
+        sys.exit(1)
+
+    total = data.get("total_count", 0)
+    if total == 0:
+        print(f"Result: No {display} API usage detected in {repo}.")
+        return
+
+    file_paths = [item["path"] for item in data.get("items", [])]
+    print(f"Found {total} file(s) mentioning '{company}', fetching top {len(file_paths)}...")
+    print()
+
+    # ── Step 2: fetch file contents and grep locally ──────────────────────────
+    file_contents = _fetch_file_contents(repo, file_paths)
+
     used = []
     not_used = []
-    errors = []
 
     for resource, info in sorted(resource_index.items()):
-        _throttle_search()
-        try:
-            data = _get(
-                f"{GITHUB_API}/search/code",
-                params={"q": f'repo:{repo} "{resource}"', "per_page": 5},
-            )
-            count = data.get("total_count", 0)
-            if count > 0:
-                files = [item["path"] for item in data.get("items", [])]
-                used.append({
-                    "resource": resource,
-                    "count": count,
-                    "files": files,
-                    "deprecated_fields": info["deprecated_fields"],
-                })
-            else:
-                not_used.append(resource)
-        except Exception as exc:
-            errors.append(f"{resource}: {exc}")
+        matched_files = [
+            path for path, content in file_contents.items()
+            if resource in content
+        ]
+        if matched_files:
+            used.append({
+                "resource": resource,
+                "count": len(matched_files),
+                "files": matched_files,
+                "deprecated_fields": info["deprecated_fields"],
+            })
+        else:
+            not_used.append(resource)
 
     # ── Report ────────────────────────────────────────────────────────────────
     issues = [r for r in used if r["deprecated_fields"]]
 
     print(f"Used  : {len(used)} resource(s)")
     print(f"Unused: {len(not_used)} resource(s)")
-    if errors:
-        print(f"Errors: {len(errors)}")
     print()
 
     for item in used:

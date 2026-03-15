@@ -44,9 +44,12 @@ jobs:
         run: python -m crawler
 
       - name: Commit updated specs
+        env:
+          CRAWLER_PAT: ${{ secrets.CRAWLER_PAT }}
         run: |
           git config user.name "driftabot-crawler[bot]"
           git config user.email "crawler@driftabot.dev"
+          git remote set-url origin "https://x-access-token:${CRAWLER_PAT}@github.com/DriftaBot/registry.git"
           git add companies/
           # Always produce a commit to prevent the scheduled workflow from
           # being auto-disabled after 60 days of no repository activity.
@@ -55,4 +58,5 @@ jobs:
           else
             git commit -m "chore: update specs $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           fi
+          git pull --rebase
           git push
