@@ -11,4 +11,7 @@
 #       - twilio
 #     contact: team@example.com      # optional
 
-consumers: []
+consumers:
+  - repo: spree/spree_stripe
+    companies:
+      - stripe
