@@ -1,12 +1,12 @@
 # Consumer Issues
 
-When a breaking change is detected and a consumer repo is found to reference the affected endpoint, DriftaBot opens a GitHub issue via the [@driftabot-agent](https://github.com/driftabot-agent) account.
+When DriftaBot checks a consumer repo and detects incorrect or outdated API usage, it opens a GitHub issue via the [@driftabot-agent](https://github.com/driftabot-agent) account.
 
 ## Issue format
 
 **Title:**
 ```
-[DriftaBot] Breaking change in Stripe API: <description>
+[DriftaBot] Breaking change in Stripe API: `<deprecated-field-or-removed-endpoint>`
 ```
 
 **Body:**
@@ -14,42 +14,49 @@ When a breaking change is detected and a consumer repo is found to reference the
 ```markdown
 ## Breaking API Change — Stripe API
 
-**DriftaBot** detected a breaking change in the **Stripe** API that may affect this repository.
+**DriftaBot** detected breaking changes in the **Stripe** API that may affect this repository.
 
-### What changed
-**<description>**
+### Deprecated fields
 
-| | |
-|---|---|
-| **Type** | `field_removed` |
-| **Path** | `/v1/customers/{id}` `GET` |
-| **Location** | `response.body.email` |
-| **Severity** | Breaking |
+**Resource `charges`** — deprecated fields:
+- `card`
 
-**Spec:** [companies/providers/stripe/openapi/stripe.openapi.json](https://github.com/DriftaBot/registry/blob/<sha>/companies/providers/stripe/openapi/stripe.openapi.json)
-
-### Files referencing this endpoint
+### Affected files
 - `src/billing/client.py`
 - `tests/test_payments.py`
 
 ### Next steps
-1. Review the files listed above and update any references to the changed endpoint or field.
+1. Review the files listed above and update any references to the changed endpoints or fields.
 2. Check the Stripe API changelog for migration guidance.
 
 ---
-*Created by [DriftaBot](https://github.com/DriftaBot/registry) · If this is a false positive, close the issue.*
+*Opened by [DriftaBot](https://github.com/DriftaBot/registry)*
 ```
-
-## Labels
-
-Issues are created with the label `api-breaking-change`.
 
 ## Deduplication
 
 Before opening an issue, DriftaBot checks for existing open issues with the same title created by `@driftabot-agent`. If a duplicate is found, no new issue is created.
 
+## Issue logs
+
+Every issue created or detected as a duplicate is logged locally to:
+
+```
+companies/consumers/<owner>/<repo>/issues/<number>.json
+```
+
+```json
+{
+  "url": "https://github.com/owner/repo/issues/42",
+  "title": "[DriftaBot] Breaking change in Stripe API: `card`",
+  "company": "Stripe",
+  "status": "created",
+  "created_at": "2026-03-15T12:55:17Z"
+}
+```
+
 ## False positives
 
-Code Search-based discovery can occasionally match repos that don't directly call the affected endpoint. If you receive a false positive, close the issue — DriftaBot will not reopen it for the same change.
+Claude's semantic analysis is generally accurate, but can occasionally flag a repo that doesn't directly call the affected endpoint. If you receive a false positive, close the issue — DriftaBot will not reopen it for the same change.
 
-To avoid false positives entirely, [register your repo](consumers) in `consumer.companies.yaml`. Registered repos skip Code Search and always receive targeted notifications.
+To avoid false positives entirely, [register your repo](consumers) in `consumer.companies.yaml`.

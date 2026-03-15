@@ -3,7 +3,6 @@
 ## Prerequisites
 
 - Python 3.12+
-- [driftabot/engine](https://driftabot.github.io/engine/install) CLI binary
 - A GitHub token with public repo read access
 
 ## Setup
@@ -61,27 +60,9 @@ See [Check Your Repo](check-consumer) for full documentation.
 | `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) | `make crawl-agent`, `make notify-agent` |
 | `DRIFTABOT_TOKEN` | PAT for [@driftabot-agent](https://github.com/driftabot-agent) (`public_repo` scope) | `make notify`, `make notify-agent` |
 
-## Running against a real spec change
-
-To test the full notifier pipeline locally:
-
-```bash
-# 1. Make a small edit to a spec file
-echo "" >> companies/providers/stripe/openapi/stripe.openapi.json
-
-# 2. Commit it (the notifier reads HEAD~1 for the diff)
-git add . && git commit -m "test: trigger notifier"
-
-# 3. Run the notifier (dry-run: no issues created without DRIFTABOT_TOKEN)
-make notify
-
-# 4. Revert
-git reset --hard HEAD~1
-```
-
 ## GitHub Actions workflows
 
 | Workflow | Trigger | Description |
 |----------|---------|-------------|
-| `crawl-specs.yml` | Every 6 hours + `workflow_dispatch` | Fetches and commits updated specs |
-| `notify-consumers.yml` | Push to `companies/providers/**` (excl. `drift/`) | Detects breaking changes, notifies consumers |
+| `crawl-specs.yml` | Every 6 hours + `workflow_dispatch` | Fetches and commits updated provider specs |
+| `notify-consumers.yml` | `workflow_dispatch` | Checks consumer repos against current specs, opens issues if needed |

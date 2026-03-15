@@ -8,7 +8,6 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/how-it-works' },
-      { text: 'Engine ↗', link: 'https://driftabot.github.io/engine', target: '_blank' },
       { text: 'Agent ↗', link: 'https://github.com/marketplace/actions/driftabot-agent', target: '_blank' },
       { text: 'GitHub', link: 'https://github.com/DriftaBot/registry' },
     ],
@@ -37,7 +36,6 @@ export default defineConfig({
       {
         text: 'Reference',
         items: [
-          { text: 'Drift Logs', link: '/drift-logs' },
           { text: 'Local Development', link: '/local-dev' },
         ],
       },

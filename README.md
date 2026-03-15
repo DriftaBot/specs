@@ -2,7 +2,7 @@
 
 The central, always-up-to-date repository for public API specifications from major companies.
 
-API specs are automatically fetched every 6 hours and diffed for breaking changes. Affected consumer repositories are notified via GitHub issues.
+API specs are automatically fetched and stored in `companies/providers/`. Consumer repositories are checked against the current spec and notified via GitHub issues when their API usage is incorrect or outdated.
 
 **[→ Full documentation](https://driftabot.github.io/registry/)**
 
@@ -11,18 +11,16 @@ API specs are automatically fetched every 6 hours and diffed for breaking change
 ```
 companies/
 └── providers/
-    ├── stripe/
-    │   ├── openapi/        OpenAPI 3.0
-    │   └── drift/          Breaking change logs (auto-generated)
-    ├── twilio/openapi/     OpenAPI 3.0 (all service specs)
-    ├── github/openapi/     OpenAPI 3.0/3.1
-    ├── slack/openapi/      OpenAPI 2.0
-    ├── sendgrid/openapi/   OpenAPI 3.0
+    ├── stripe/openapi/       OpenAPI 3.0
+    ├── twilio/openapi/       OpenAPI 3.0 (all service specs)
+    ├── github/openapi/       OpenAPI 3.0/3.1
+    ├── slack/openapi/        OpenAPI 2.0
+    ├── sendgrid/openapi/     OpenAPI 3.0
     ├── digitalocean/openapi/ OpenAPI 3.0
-    ├── netlify/openapi/    OpenAPI 2.0
-    ├── pagerduty/openapi/  OpenAPI 3.0
-    ├── shopify/graphql/    GraphQL SDL
-    └── google/grpc/        gRPC / Protobuf
+    ├── netlify/openapi/      OpenAPI 2.0
+    ├── pagerduty/openapi/    OpenAPI 3.0
+    ├── shopify/graphql/      GraphQL SDL
+    └── google/grpc/          gRPC / Protobuf
 ```
 
 ## Quick Start

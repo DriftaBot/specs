@@ -4,7 +4,7 @@ layout: home
 hero:
   name: DriftaBot Registry
   text: Public API Spec Registry
-  tagline: Always-up-to-date API specifications with automatic breaking change detection and consumer notifications.
+  tagline: Always-up-to-date API specifications. Consumer repos are checked directly against current provider specs and notified when their API usage is incorrect or outdated.
   actions:
     - theme: brand
       text: How It Works
@@ -19,10 +19,10 @@ hero:
 features:
   - title: Auto-crawled every 6 hours
     details: API specs are fetched from each provider's canonical GitHub repository on a schedule. A LangGraph agent runs at midnight UTC; the other three runs use a fast deterministic crawler to keep costs low.
-  - title: Breaking change detection
-    details: Every spec update is diffed using the driftabot/engine CLI. Breaking changes are classified by severity and logged to a per-provider drift directory.
+  - title: Specs as source of truth
+    details: Provider specs in companies/providers/ are always current. No spec diffing or change tracking needed — the notifier checks consumer code directly against the latest spec on every run.
   - title: Automatic consumer notifications
-    details: When a breaking change is detected, GitHub Code Search finds public repos that use the affected API. A GitHub issue is opened in each affected repo by the @driftabot-agent account.
+    details: GitHub Code Search finds public repos that use a provider's API. Claude semantically analyses each repo's code to detect incorrect or outdated API usage, and opens a GitHub issue via @driftabot-agent.
   - title: Opt-in consumer registry
-    details: Register your repo in consumer.companies.yaml to always receive notifications — no search cap, no false positives.
+    details: Register your repo in consumer.companies.yaml to always be checked — no search cap, no false negatives from Code Search.
 ---
