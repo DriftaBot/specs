@@ -23,3 +23,7 @@ consumers:
   - repo: auth0/rules
     companies:
       - sendgrid
+
+  - repo: kaansoral/adventureland
+    companies:
+      - stripe
