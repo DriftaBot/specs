@@ -36,11 +36,11 @@ jobs:
           git config user.name "driftabot-crawler[bot]"
           git config user.email "crawler@driftabot.dev"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/DriftaBot/registry.git"
-          git add companies/
+          git add companies/providers/
           if git diff --staged --quiet; then
             echo "No spec changes."
           else
-            git commit -m "chore: update specs $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git commit -m "chore: update provider specs $(date -u +%Y-%m-%dT%H:%M:%SZ)"
             git pull --rebase
             git push
           fi

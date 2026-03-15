@@ -4,20 +4,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write          # write drift result files back to repo
-
-env:
-  DRIFTABOT_ENGINE_VERSION: "6.0.5"
+  contents: write          # write consumer issue logs back to repo
 
 jobs:
   notify:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository (with history)
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2    # need HEAD~1 for git diff comparison in get_changed_specs
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -28,29 +23,20 @@ jobs:
       - name: Install Python dependencies
         run: pip install -e .
 
-      - name: Download driftabot engine binary
-        run: |
-          curl -sSL \
-            "https://github.com/DriftaBot/engine/releases/download/v${DRIFTABOT_ENGINE_VERSION}/driftabot_linux_amd64.tar.gz" \
-            | tar -xz -C /usr/local/bin driftabot
-          chmod +x /usr/local/bin/driftabot
-          driftabot help
-
       - name: Run consumer notifier
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           DRIFTABOT_TOKEN: ${{ secrets.DRIFTABOT_TOKEN }}
-          DRIFTABOT_ENGINE_PATH: driftabot
         run: python -m notifier
 
-      - name: Commit drift results
+      - name: Commit consumer issue logs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name  "driftabot-crawler[bot]"
           git config user.email "crawler@driftabot.dev"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/DriftaBot/registry.git"
-          git add companies/providers/*/drift/
-          git diff --cached --quiet && echo "No drift results to commit." || \
-            git commit -m "chore: log drift detection results [skip ci]" && git pull --rebase && git push
+          git add companies/consumers/
+          git diff --cached --quiet && echo "No issue logs to commit." || \
+            git commit -m "chore: log consumer issue notifications [skip ci]" && git pull --rebase && git push

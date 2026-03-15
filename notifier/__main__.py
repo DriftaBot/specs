@@ -17,8 +17,10 @@ def main() -> None:
         final_state = agent.invoke({
             "messages": [(
                 "user",
-                "Detect breaking API changes from the latest spec crawl and notify "
-                "affected consumer repositories by creating GitHub issues. "
+                "Check all consumer repositories against the current provider specs "
+                "in companies/providers/. For each company, check registered consumers "
+                "first, then discover and check new candidates. "
+                "Raise GitHub issues for any incorrect or outdated API usage found. "
                 "Print a summary at the end.",
             )]
         })
