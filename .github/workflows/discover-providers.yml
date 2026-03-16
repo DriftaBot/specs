@@ -1,8 +1,6 @@
 name: Discover New Providers
 
 on:
-  schedule:
-    - cron: '0 9 * * 1'   # Every Monday 09:00 UTC
   workflow_dispatch:
 
 permissions:

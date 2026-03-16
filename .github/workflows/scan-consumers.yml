@@ -2,7 +2,7 @@ name: Scan Consumers
 
 on:
   schedule:
-    - cron: '0 4 * * *'   # Daily at 04:00 UTC (after discover-consumers at 02:00)
+    - cron: '0 4 * * 3'   # Weekly on Wednesday at 04:00 UTC
   workflow_dispatch:
 
 permissions:
