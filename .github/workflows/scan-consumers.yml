@@ -1,4 +1,4 @@
-name: Notify Consumers
+name: Scan Consumers
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  notify:
+  scan:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,20 +23,20 @@ jobs:
       - name: Install dependencies
         run: pip install -e .
 
-      - name: Notify registered consumers
+      - name: Scan registered consumers
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           DRIFTABOT_TOKEN: ${{ secrets.DRIFTABOT_TOKEN }}
-        run: python -m notifier notify
+        run: python -m notifier scan
 
-      - name: Commit consumer issue logs
+      - name: Commit scan results
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name  "driftabot-crawler[bot]"
           git config user.email "crawler@driftabot.dev"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/DriftaBot/registry.git"
-          if [ -d companies/consumers/ ]; then git add companies/consumers/; fi
-          git diff --cached --quiet && echo "No issue logs to commit." || \
-            git commit -m "chore: log consumer issue notifications [skip ci]" && git pull --rebase && git push
+          git add companies/consumers/
+          git diff --cached --quiet && echo "No scan results to commit." || \
+            git commit -m "chore: update consumer scan results [skip ci]" && git pull --rebase && git push
