@@ -1,20 +1,20 @@
 # Register for Notifications
 
-There are two ways a repo can receive breaking change notifications:
+There are two ways a repo can receive breaking change notifications from DriftaBot.
 
 ## Dynamic discovery (automatic)
 
-GitHub Code Search automatically finds public repos that reference a provider's client libraries. Up to 20 repos total are checked per notifier run. No action required — if your repo imports a tracked SDK, it may already be discovered.
+The `discover-consumers` workflow runs daily at 02:00 UTC. It uses GitHub Code Search to find public repos (≥100 stars) that reference a provider's client libraries and are not yet registered. Each candidate is checked against the current provider spec.
 
-If issues are found, the repo is registered in `consumer.companies.yaml` automatically and will be checked on every future run.
+If issues are found, the repo is registered in `consumer.companies.yaml` automatically, a GitHub issue is opened, and the repo will be included in every future `scan-consumers` run.
 
-The trade-off: dynamic discovery relies on Code Search matching your import patterns and is subject to the 20-repo-per-run cap.
+The trade-off: dynamic discovery relies on Code Search matching your import patterns. Registering explicitly (below) guarantees you are always checked.
 
 ## Opt-in registry (recommended)
 
-Register your repo in [`consumer.companies.yaml`](https://github.com/DriftaBot/registry/blob/main/consumer.companies.yaml) to be checked on every notifier run:
+Register your repo in [`consumer.companies.yaml`](https://github.com/DriftaBot/registry/blob/main/consumer.companies.yaml) to be checked by the `scan-consumers` workflow (daily 04:00 UTC):
 
-- **Always checked** — registered repos are never skipped, regardless of the discovery cap
+- **Always checked** — registered repos are never skipped
 - **No false negatives** — you won't be missed if Code Search doesn't match your import style
 - **Pinned** — you stay registered even if your import patterns change
 

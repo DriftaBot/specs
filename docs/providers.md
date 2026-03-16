@@ -48,4 +48,4 @@ The `consumers` list controls how GitHub Code Search discovers repos to notify. 
 | Ruby | `gem "acme" language:ruby` |
 | Java | `"com.acme:acme-sdk" language:java` |
 
-Up to 20 repos are discovered dynamically per company per run. Repos registered in [`consumer.companies.yaml`](consumers) are always notified on top of this cap.
+Repos registered in [`consumer.companies.yaml`](consumers) are always scanned by the `scan-consumers` workflow. New repos are discovered automatically by the `discover-consumers` workflow using these queries.

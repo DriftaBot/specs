@@ -17,12 +17,12 @@ hero:
       link: /consumers
 
 features:
-  - title: Auto-crawled every 6 hours
-    details: API specs are fetched from each provider's canonical GitHub repository on a schedule. A LangGraph agent runs at midnight UTC; the other three runs use a fast deterministic crawler to keep costs low.
-  - title: Specs as source of truth
-    details: Provider specs in companies/providers/ are always current. No spec diffing or change tracking needed — the notifier checks consumer code directly against the latest spec on every run.
+  - title: Auto-crawled daily
+    details: API specs are fetched from each provider's canonical GitHub repository every day at midnight UTC. The crawler runs as a LangGraph agent when ANTHROPIC_API_KEY is set, or as a fast deterministic runner to keep costs low.
+  - title: Spec diffs tracked
+    details: After each crawl, the @driftabot/engine diff runs against changed specs and saves structured drift results to drifts/ for downstream consumers.
   - title: Automatic consumer notifications
-    details: GitHub Code Search finds public repos that use a provider's API. Claude semantically analyses each repo's code to detect incorrect or outdated API usage, and opens a GitHub issue via @driftabot-agent.
+    details: GitHub Code Search finds public repos (≥100 stars) that use a provider's API. Claude semantically analyses each repo's code to detect incorrect or outdated API usage, and opens a GitHub issue via @driftabot-agent.
   - title: Opt-in consumer registry
-    details: Register your repo in consumer.companies.yaml to always be checked — no search cap, no false negatives from Code Search.
+    details: Register your repo in consumer.companies.yaml to always be scanned by the daily scan-consumers workflow — no search cap, no false negatives from Code Search.
 ---
