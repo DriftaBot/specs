@@ -254,6 +254,10 @@ def _path_from_spec_url(spec_url: str) -> str | None:
     return None
 
 
+_SAFE_NAME_RE = re.compile(r"^[A-Za-z0-9_\-\.]+$")
+_MAX_DOWNLOAD_BYTES = 50 * 1024 * 1024  # 50 MB
+
+
 def _fetch_and_save_spec(candidate: dict) -> bool:
     """
     Download the spec from spec_url and save to
@@ -267,12 +271,37 @@ def _fetch_and_save_spec(candidate: dict) -> bool:
     name      = candidate["name"]
     spec_type = candidate.get("spec_type", "openapi")
     ext       = ".yaml" if spec_url.rstrip("?").rsplit(".", 1)[-1] in ("yaml", "yml") else ".json"
+
+    # Validate name — must not contain path traversal or shell-special chars
+    if not _SAFE_NAME_RE.match(name) or ".." in name:
+        print(f"  [skip]     unsafe provider name: {name!r}")
+        return False
+
     out_path  = REPO_ROOT / "companies" / "providers" / name / spec_type / f"{name}{ext}"
+
+    # Validate that the resolved path stays under companies/providers/
+    allowed = (REPO_ROOT / "companies" / "providers").resolve()
+    resolved = out_path.resolve()
+    if not str(resolved).startswith(str(allowed) + os.sep):
+        print(f"  [skip]     path traversal detected for {name!r}: {out_path}")
+        return False
 
     try:
         with httpx.Client(timeout=30, follow_redirects=True) as c:
+            # Check Content-Length before downloading
+            head = c.head(spec_url)
+            content_length = int(head.headers.get("Content-Length", 0))
+            if content_length > _MAX_DOWNLOAD_BYTES:
+                print(f"  [skip]     {name}: Content-Length {content_length} exceeds 50 MB limit")
+                return False
+
             r = c.get(spec_url)
             r.raise_for_status()
+
+        if len(r.content) > _MAX_DOWNLOAD_BYTES:
+            print(f"  [skip]     {name}: downloaded content exceeds 50 MB limit")
+            return False
+
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_bytes(r.content)
         print(f"  [saved]    {out_path.relative_to(REPO_ROOT)}")

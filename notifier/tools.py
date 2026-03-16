@@ -189,12 +189,13 @@ def search_consumer_repos_plain(company_name: str) -> list[dict]:
     return repos
 
 
-def create_issue_plain(repo_full_name: str, title: str, body: str) -> dict:
+def create_issue_plain(repo_full_name: str, title: str, body: str, token: str | None = None) -> dict:
     """
-    Create a GitHub issue using DRIFTABOT_TOKEN. Checks for duplicates first.
+    Create a GitHub issue using DRIFTABOT_TOKEN (or the supplied token).
+    Checks for duplicates first.
     Returns {status: "created"|"duplicate"|"error", url, error}.
     """
-    token = os.environ.get("DRIFTABOT_TOKEN", "")
+    token = token or os.environ.get("DRIFTABOT_TOKEN", "")
     if not token:
         return {"status": "error", "url": None, "error": "DRIFTABOT_TOKEN not set"}
 

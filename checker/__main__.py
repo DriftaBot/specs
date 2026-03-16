@@ -395,16 +395,7 @@ def _raise_github_issue(
 
     title, body = _build_issue(display, spec_path, used, issues_removed)
 
-    # Temporarily swap token so create_issue_plain uses DRIFTABOT_TOKEN
-    prev = os.environ.get("GITHUB_TOKEN")
-    os.environ["GITHUB_TOKEN"] = token
-    try:
-        result = create_issue_plain(repo, title, body)
-    finally:
-        if prev is None:
-            os.environ.pop("GITHUB_TOKEN", None)
-        else:
-            os.environ["GITHUB_TOKEN"] = prev
+    result = create_issue_plain(repo, title, body, token=token)
 
     if result["status"] == "created":
         print(f"  [issue created] {result['url']}")

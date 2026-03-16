@@ -40,10 +40,11 @@ def _get(url: str, params: dict | None = None) -> Any:
             resp = client.get(url, headers=_github_headers(), params=params)
         if resp.status_code == 200:
             return resp.json()
-        if resp.status_code in (429, 403):
+        if resp.status_code == 429:
             retry_after = int(resp.headers.get("Retry-After", backoff))
             time.sleep(retry_after)
             continue
+        # 403 is an auth/permission error — fail fast, do not retry
         resp.raise_for_status()
     raise RuntimeError(f"GitHub API request failed after {_MAX_RETRIES} retries: {url}")
 
@@ -85,9 +86,21 @@ def content_sha256(content: str) -> str:
     return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
 
+_PROVIDERS_ROOT = REPO_ROOT / "companies" / "providers"
+
+
+def _check_providers_path(full_path: Path) -> None:
+    """Raise ValueError if full_path is not under companies/providers/."""
+    resolved = full_path.resolve()
+    allowed = _PROVIDERS_ROOT.resolve()
+    if not str(resolved).startswith(str(allowed) + os.sep) and resolved != allowed:
+        raise ValueError(f"Path traversal detected: {full_path} is outside {allowed}")
+
+
 def existing_sha256(output_path: str) -> str | None:
     """Return SHA-256 of existing local file, or None if absent."""
     full_path = REPO_ROOT / output_path
+    _check_providers_path(full_path)
     if not full_path.exists():
         return None
     return hashlib.sha256(full_path.read_bytes()).hexdigest()
@@ -95,6 +108,7 @@ def existing_sha256(output_path: str) -> str | None:
 
 def write_file(output_path: str, content: str) -> None:
     full_path = REPO_ROOT / output_path
+    _check_providers_path(full_path)
     full_path.parent.mkdir(parents=True, exist_ok=True)
     full_path.write_text(content, encoding="utf-8")
 

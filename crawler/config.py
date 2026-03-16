@@ -1,7 +1,7 @@
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import List, Optional
 import yaml
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 REPO_ROOT = Path(__file__).parent.parent
@@ -16,6 +16,13 @@ class SpecConfig(BaseModel):
     path_pattern: Optional[str] = None  # directory to list and fetch all files from
     output: Optional[str] = None        # single output file path (relative to repo root)
     output_dir: Optional[str] = None    # output directory for path_pattern results
+
+    @field_validator("path", "output", "output_dir", mode="before")
+    @classmethod
+    def _no_dotdot(cls, v: Optional[str]) -> Optional[str]:
+        if v is not None and ".." in PurePosixPath(v).parts:
+            raise ValueError(f"Path component '..' is not allowed: {v!r}")
+        return v
 
 
 class ConsumerConfig(BaseModel):
