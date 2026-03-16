@@ -286,7 +286,7 @@ companies:
         path: bclaws/bclaws.json
         output: companies/providers/bcgov/openapi/bcgov.json
   - name: betfair
-    display_name: Betfair: Exchange Streaming API
+    display_name: "Betfair: Exchange Streaming API"
     specs:
       - type: openapi
         repo: betfair/stream-api-sample-code
