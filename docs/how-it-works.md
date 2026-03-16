@@ -15,18 +15,18 @@ crawl-providers (daily 00:00 UTC)
         ├─► companies/providers/   (updated specs)
         └─► drifts/                (per-repo drift results)
 
-discover-providers (Mondays 09:00 UTC)
+discover-providers (manual dispatch)
   python -m discoverer
         │
         └─► provider.companies.yaml  (new entries)
 
-discover-consumers (daily 02:00 UTC)
+discover-consumers (weekly Monday 02:00 UTC)
   python -m notifier discover
         │
         ├─► consumer.companies.yaml  (newly registered repos)
         └─► companies/consumers/pass|fail/
 
-scan-consumers (daily 04:00 UTC)
+scan-consumers (weekly Wednesday 04:00 UTC)
   python -m notifier scan
         │
         └─► companies/consumers/pass|fail/
@@ -39,15 +39,15 @@ scan-consumers (daily 04:00 UTC)
 3. `scripts/run_diff.py` runs the `@driftabot/engine` NPM package to diff changed specs and writes results to `drifts/<org>/<repo>/result.json`.
 4. **Cost optimisation** — with `ANTHROPIC_API_KEY` set, the crawler runs as a LangGraph ReAct agent (Claude). Without it, a fast deterministic runner is used instead with no LLM cost.
 
-## 2. discover-providers (Mondays 09:00 UTC)
+## 2. discover-providers (manual dispatch)
 
-`python -m discoverer` searches GitHub for public API providers not yet in `provider.companies.yaml` and adds new entries. Results are committed back to the repo.
+`python -m discoverer` searches GitHub for public API providers not yet in `provider.companies.yaml` and adds new entries. Results are committed back to the repo. Triggered manually via `workflow_dispatch`.
 
-## 3. discover-consumers (daily 02:00 UTC)
+## 3. discover-consumers (weekly Monday 02:00 UTC)
 
 `python -m notifier discover` finds new public repos (≥100 stars) that import a tracked provider's client libraries but are not yet in `consumer.companies.yaml`. Each candidate is checked against the current provider spec. If issues are found, the repo is registered and a GitHub issue is opened by [@driftabot-agent](https://github.com/driftabot-agent). Pass/fail results are written to `companies/consumers/`.
 
-## 4. scan-consumers (daily 04:00 UTC)
+## 4. scan-consumers (weekly Wednesday 04:00 UTC)
 
 `python -m notifier scan` checks every repo already registered in `consumer.companies.yaml` against the current provider specs in `companies/providers/`. Results are written to `companies/consumers/pass|fail`. Issues are opened for any new problems found.
 

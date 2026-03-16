@@ -81,7 +81,7 @@ See [Check Your Repo](check-consumer) for full documentation.
 | Workflow | Schedule | Description |
 |----------|----------|-------------|
 | `crawl-providers.yml` | Daily 00:00 UTC | Fetches and commits updated provider specs; runs `@driftabot/engine` diff |
-| `discover-providers.yml` | Mondays 09:00 UTC | Discovers new API providers, updates `provider.companies.yaml` |
-| `discover-consumers.yml` | Daily 02:00 UTC | Finds new consumer repos, checks and registers them |
-| `scan-consumers.yml` | Daily 04:00 UTC | Scans all registered consumers, writes pass/fail results |
+| `discover-providers.yml` | Manual dispatch | Discovers new API providers, updates `provider.companies.yaml` |
+| `discover-consumers.yml` | Weekly Monday 02:00 UTC | Finds new consumer repos, checks and registers them |
+| `scan-consumers.yml` | Weekly Wednesday 04:00 UTC | Scans all registered consumers, writes pass/fail results |
 | `docs.yml` | On push to `main` | Builds and deploys VitePress docs to GitHub Pages |

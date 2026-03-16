@@ -9,9 +9,9 @@ The central, always-up-to-date repository for public API specifications from maj
 | Workflow | Schedule | What it does |
 |----------|----------|--------------|
 | `crawl-providers` | Daily 00:00 UTC | Fetches fresh provider specs, runs the `@driftabot/engine` diff, saves drift results to `drifts/<org>/<repo>/result.json` |
-| `discover-providers` | Mondays 09:00 UTC | Discovers new public API providers not yet in `provider.companies.yaml` |
-| `discover-consumers` | Daily 02:00 UTC | Finds new consumer repos (≥100 stars) not in `consumer.companies.yaml`, checks them, registers + writes pass/fail results |
-| `scan-consumers` | Daily 04:00 UTC | Scans all registered consumers in `consumer.companies.yaml` against provider specs, writes results to `companies/consumers/pass\|fail` |
+| `discover-providers` | Manual dispatch | Discovers new public API providers not yet in `provider.companies.yaml` |
+| `discover-consumers` | Weekly Monday 02:00 UTC | Finds new consumer repos (≥100 stars) not in `consumer.companies.yaml`, checks them, registers + writes pass/fail results |
+| `scan-consumers` | Weekly Wednesday 04:00 UTC | Scans all registered consumers in `consumer.companies.yaml` against provider specs, writes results to `companies/consumers/pass\|fail` |
 | `docs` | On push to `main` | Rebuilds GitHub Pages |
 
 ## Secrets Required

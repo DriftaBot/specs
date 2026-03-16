@@ -4,7 +4,7 @@ There are two ways a repo can receive breaking change notifications from DriftaB
 
 ## Dynamic discovery (automatic)
 
-The `discover-consumers` workflow runs daily at 02:00 UTC. It uses GitHub Code Search to find public repos (≥100 stars) that reference a provider's client libraries and are not yet registered. Each candidate is checked against the current provider spec.
+The `discover-consumers` workflow runs weekly on Mondays at 02:00 UTC. It uses GitHub Code Search to find public repos (≥100 stars) that reference a provider's client libraries and are not yet registered. Each candidate is checked against the current provider spec.
 
 If issues are found, the repo is registered in `consumer.companies.yaml` automatically, a GitHub issue is opened, and the repo will be included in every future `scan-consumers` run.
 
@@ -12,7 +12,7 @@ The trade-off: dynamic discovery relies on Code Search matching your import patt
 
 ## Opt-in registry (recommended)
 
-Register your repo in [`consumer.companies.yaml`](https://github.com/DriftaBot/registry/blob/main/consumer.companies.yaml) to be checked by the `scan-consumers` workflow (daily 04:00 UTC):
+Register your repo in [`consumer.companies.yaml`](https://github.com/DriftaBot/registry/blob/main/consumer.companies.yaml) to be checked by the `scan-consumers` workflow (weekly Wednesday 04:00 UTC):
 
 - **Always checked** — registered repos are never skipped
 - **No false negatives** — you won't be missed if Code Search doesn't match your import style
