@@ -81,7 +81,10 @@ def _url_in_spec(url_path: str, spec_paths: list[str]) -> bool:
     if not path.startswith("/"):
         path = "/" + path
     for spec_path in spec_paths:
-        pattern = re.sub(r"\{[^}]+\}", "[^/]+", re.escape(spec_path))
+        # Split on {param} BEFORE escaping so literal segments are escaped correctly.
+        # (re.escape first would turn { } into \{ \}, breaking the substitution.)
+        parts = re.split(r"\{[^}]+\}", spec_path)
+        pattern = "[^/]+".join(re.escape(p) for p in parts)
         if re.fullmatch(pattern, path):
             return True
     return False
@@ -137,11 +140,12 @@ def _analyze_file_with_claude(
             f"1. Return the subset of the provided resource names genuinely referenced as "
             f"{display_name} API calls or SDK method calls. Only include resources that appear "
             f"as actual API interactions, not incidental string matches.\n"
-            f"2. Extract all API endpoint URL paths explicitly referenced in the code "
-            f"(string literals, template strings, SDK method paths, etc.). "
+            f"2. Extract API endpoint URL paths that appear as explicit string literals or "
+            f"f-string/template constructions in HTTP client calls in the code. "
             f"Return only the path portion (e.g. \"/api/mail.send.json\", \"/v3/mail/send\") — "
-            f"strip the scheme and host. Include paths that appear to be making HTTP requests "
-            f"to this API via any HTTP client or SDK."
+            f"strip the scheme and host. "
+            f"Do NOT include OAuth/authentication-flow endpoints, webhook callback URLs, or paths "
+            f"inferred solely from SDK method names with no explicit URL string present."
         ),
         messages=[{
             "role": "user",
