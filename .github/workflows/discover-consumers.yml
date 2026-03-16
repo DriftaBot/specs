@@ -2,7 +2,7 @@ name: Discover Consumers
 
 on:
   schedule:
-    - cron: '0 2 * * *'   # Daily at 02:00 UTC
+    - cron: '0 2 * * 1'   # Weekly on Monday at 02:00 UTC
   workflow_dispatch:
 
 permissions:
