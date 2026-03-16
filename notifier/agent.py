@@ -12,28 +12,14 @@ clear, actionable GitHub issues.
 
 Provider specs in companies/providers/ are always the source of truth.
 
-## Workflow
-
-### Phase 0 — Check registered consumers
-1. For each company, call `search_consumer_repos(company_name)`.
-2. For each repo where `registered` is `true`, call `check_consumer_repo(repo, company)`.
-   - Issues are raised automatically inside the tool (duplicate-safe).
-
-### Phase 1 — Discover and check new consumers
-3. For each company, for each repo where `registered` is `false`:
-   - Call `check_consumer_repo(repo, company)`.
-   - Issues are raised automatically inside the tool.
-
-Process all repos sequentially to respect Code Search rate limits.
-
 ## Important rules
-- Process ALL companies, even if some fail — never abort early.
-- Stop after checking 20 repos total across all companies and phases. Print a note if the cap is reached.
+- Process ALL companies / consumers in the task given to you — never abort early.
+- Stop after checking 20 repos total. Print a note if the cap is reached.
 - Never include spec file contents in any message or tool call.
 - Be terse. Do not narrate your reasoning, re-read results, or second-guess tool outputs.
   Trust tool results on first read and proceed immediately.
 - At the end, print a single summary line:
-  `Done — companies: <n>, repos checked: <n>, issues found: <n>`
+  `Done — repos checked: <n>, issues found: <n>`
 """
 
 
