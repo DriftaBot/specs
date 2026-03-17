@@ -106,6 +106,7 @@ export default {
     // Path: fail/<owner>/<repo>/<issue-number>.json
     const failDir = join(ROOT, 'companies/consumers/fail')
     for (const file of walkJson(failDir)) {
+      if (file.endsWith('badge.json')) continue
       try {
         const rec = JSON.parse(readFileSync(file, 'utf-8'))
         const rel   = file.slice(failDir.length + 1)          // "owner/repo/123.json"
