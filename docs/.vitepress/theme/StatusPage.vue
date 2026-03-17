@@ -62,7 +62,6 @@
             <tr>
               <th>Repository</th>
               <th>Provider</th>
-              <th>Status</th>
               <th>Last checked</th>
               <th>Issues</th>
               <th>Badge</th>
@@ -78,11 +77,6 @@
                 <a :href="c.repoUrl" target="_blank" rel="noopener">{{ c.repo }}</a>
               </td>
               <td>{{ c.company }}</td>
-              <td>
-                <span :class="['sp-status', 'sp-status--' + c.status]">
-                  {{ c.status === 'passed' ? '✓' : '✗' }}
-                </span>
-              </td>
               <td class="sp-date">{{ c.checkedAt ? formatDate(c.checkedAt) : '—' }}</td>
               <td>
                 <span v-if="!c.issues.length" class="sp-no-issues">—</span>
