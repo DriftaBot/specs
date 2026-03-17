@@ -160,11 +160,7 @@ function formatDate(iso: string): string {
   const day   = d.getUTCDate()
   const month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getUTCMonth()]
   const year  = d.getUTCFullYear()
-  let   hours = d.getUTCHours()
-  const mins  = String(d.getUTCMinutes()).padStart(2, '0')
-  const ampm  = hours >= 12 ? 'pm' : 'am'
-  hours = hours % 12 || 12
-  return `${day} ${month} ${year} ${hours}:${mins} ${ampm}`
+  return `${day} ${month} ${year}`
 }
 
 function issueNum(url: string): string {
@@ -333,20 +329,16 @@ a.sp-provider-card:hover {
 .sp-badge--grpc    { background: #dcfce7; color: #15803d; }
 
 /* ── Consumer table ──────────────────────────────────────────── */
-.sp-table-wrap {
-  overflow-x: auto;
-  margin: 0 -1.5rem;
-  padding: 0 1.5rem;
-}
+.sp-table-wrap { overflow-x: auto; }
 .sp-table {
   width: 100%;
-  min-width: 900px;
+  min-width: 780px;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
 }
 .sp-table th {
   text-align: left;
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.5rem;
   background: var(--vp-c-bg-soft);
   border-bottom: 2px solid var(--vp-c-divider);
   color: var(--vp-c-text-2);
@@ -354,7 +346,7 @@ a.sp-provider-card:hover {
   white-space: nowrap;
 }
 .sp-table td {
-  padding: 0.55rem 0.75rem;
+  padding: 0.4rem 0.5rem;
   border-bottom: 1px solid var(--vp-c-divider);
   vertical-align: middle;
 }
