@@ -74,8 +74,11 @@
               :key="c.repo"
               :class="c.status === 'failed' ? 'sp-row--fail' : 'sp-row--pass'"
             >
-              <td>
-                <a :href="c.repoUrl" target="_blank" rel="noopener">{{ c.repo }}</a>
+              <td class="sp-repo-cell">
+                <span class="sp-repo-org">{{ c.repo.split('/')[0] }}</span>
+                <a :href="c.repoUrl" target="_blank" rel="noopener" class="sp-repo-name">
+                  <span class="sp-repo-tree">|_</span>{{ c.repo.split('/')[1] }}
+                </a>
               </td>
               <td>{{ c.company }}</td>
               <td>
@@ -355,6 +358,10 @@ a.sp-provider-card:hover {
   text-decoration: none;
 }
 .sp-table a:hover { text-decoration: underline; }
+.sp-repo-cell { line-height: 1.4; }
+.sp-repo-org  { display: block; font-size: 0.8rem; color: var(--vp-c-text-2); }
+.sp-repo-name { display: block; font-size: 0.82rem; padding-left: 0.5rem; }
+.sp-repo-tree { color: var(--vp-c-text-3); margin-right: 0.2rem; }
 
 /* ── Status badges ───────────────────────────────────────────── */
 .sp-status {
