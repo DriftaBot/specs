@@ -336,6 +336,7 @@ a.sp-provider-card:hover {
 .sp-table-wrap { overflow-x: auto; }
 .sp-table {
   width: 100%;
+  min-width: 860px;
   border-collapse: collapse;
   font-size: 0.875rem;
 }
