@@ -1,483 +1,414 @@
 companies:
-  - name: stripe
-    display_name: Stripe
-    specs:
-      - type: openapi
-        repo: stripe/openapi
-        path: openapi/spec3.json
-        output: companies/providers/stripe/openapi/stripe.openapi.json
-    consumers:
-      - query: "stripe language:python"
-      - query: "from stripe import language:python"
-      - query: "require(\"stripe\") language:javascript"
-      - query: "from 'stripe' language:typescript"
-      - query: "github.com/stripe/stripe-go language:go"
-      - query: "Stripe::StripeClient language:ruby"
-
-  - name: twilio
-    display_name: Twilio
-    specs:
-      - type: openapi
-        repo: twilio/twilio-oai
-        # Fetch all JSON spec files in the directory
-        path_pattern: spec/json
-        output_dir: companies/providers/twilio/openapi/
-    consumers:
-      - query: "twilio language:python"
-      - query: "from twilio.rest import language:python"
-      - query: "require(\"twilio\") language:javascript"
-      - query: "github.com/twilio/twilio-go language:go"
-      - query: "Twilio::REST language:ruby"
-
-  - name: github
-    display_name: GitHub
-    specs:
-      - type: openapi
-        repo: github/rest-api-description
-        path: descriptions/api.github.com/api.github.com.json
-        output: companies/providers/github/openapi/github.openapi.json
-    consumers:
-      - query: "from github import Github language:python"
-      - query: "PyGithub language:python"
-      - query: "require(\"@octokit/rest\") language:javascript"
-      - query: "from '@octokit/rest' language:typescript"
-      - query: "github.com/google/go-github language:go"
-
-  - name: slack
-    display_name: Slack
-    specs:
-      - type: openapi
-        repo: slackapi/slack-api-specs
-        path: web-api/slack_web_openapi_v2.json
-        output: companies/providers/slack/openapi/slack.openapi.json
-    consumers:
-      - query: "from slack_sdk import language:python"
-      - query: "slack_sdk language:python"
-      - query: "require(\"@slack/web-api\") language:javascript"
-      - query: "from '@slack/web-api' language:typescript"
-      - query: "github.com/slack-go/slack language:go"
-
-  - name: sendgrid
-    display_name: SendGrid
-    specs:
-      - type: openapi
-        repo: twilio/sendgrid-oai
-        path_pattern: spec/json
-        output_dir: companies/providers/sendgrid/openapi/
-    consumers:
-      - query: "sendgrid language:python"
-      - query: "from sendgrid import language:python"
-      - query: "require(\"@sendgrid/mail\") language:javascript"
-      - query: "from '@sendgrid/mail' language:typescript"
-      - query: "github.com/sendgrid/sendgrid-go language:go"
-
-  - name: digitalocean
-    display_name: DigitalOcean
-    specs:
-      - type: openapi
-        repo: digitalocean/openapi
-        path: specification/DigitalOcean-public.v2.yaml
-        output: companies/providers/digitalocean/openapi/digitalocean.openapi.yaml
-    consumers:
-      - query: "python-digitalocean language:python"
-      - query: "import digitalocean language:python"
-      - query: "require(\"do-wrapper\") language:javascript"
-      - query: "github.com/digitalocean/godo language:go"
-
-  - name: netlify
-    display_name: Netlify
-    specs:
-      - type: openapi
-        repo: netlify/open-api
-        path: swagger.yml
-        output: companies/providers/netlify/openapi/netlify.openapi.yaml
-    consumers:
-      - query: "netlify-cli language:javascript"
-      - query: "require(\"netlify\") language:javascript"
-      - query: "from netlify import language:python"
-      - query: "github.com/netlify/open-api language:go"
-
-  - name: pagerduty
-    display_name: PagerDuty
-    specs:
-      - type: openapi
-        repo: PagerDuty/api-schema
-        path: REST/openapiv3.json
-        output: companies/providers/pagerduty/openapi/pagerduty.openapi.json
-    consumers:
-      - query: "pdpyras language:python"
-      - query: "from pdpyras import language:python"
-      - query: "require(\"node-pagerduty\") language:javascript"
-      - query: "github.com/PagerDuty/go-pagerduty language:go"
-
-  - name: shopify
-    display_name: Shopify
-    specs:
-      - type: graphql
-        repo: Shopify/graphql-design-tutorial
-        # NOTE: Shopify's production GraphQL SDL is not publicly committed to GitHub.
-        # This entry is a placeholder; update path once a canonical SDL source is confirmed.
-        path: README.md
-        output: companies/providers/shopify/graphql/.keep
-    consumers:
-      - query: "shopify language:python"
-      - query: "from shopify import language:python"
-      - query: "require(\"shopify-api-node\") language:javascript"
-      - query: "github.com/bold-commerce/go-shopify language:go"
-
-  - name: google
-    display_name: Google
-    specs:
-      - type: grpc
-        repo: googleapis/googleapis
-        # Fetch all proto files for the Pub/Sub v1 API as an example
-        path_pattern: google/pubsub/v1
-        output_dir: companies/providers/google/grpc/pubsub_v1/
-    consumers:
-      - query: "google-cloud-pubsub language:python"
-      - query: "from google.cloud import pubsub language:python"
-      - query: "require(\"@google-cloud/pubsub\") language:javascript"
-      - query: "cloud.google.com/go/pubsub language:go"
-  - name: authentiqid
-    display_name: Authentiq API
-    specs:
-      - type: openapi
-        repo: AuthentiqID/authentiq-docs
-        path: docs/swagger/issuer.yaml
-        output: companies/providers/authentiqid/openapi/authentiqid.yaml
-  - name: ably
-    display_name: Platform API
-    specs:
-      - type: openapi
-        repo: ably/open-specs
-        path: definitions/platform-v1.yaml
-        output: companies/providers/ably/openapi/ably.yaml
-  - name: adafruit
-    display_name: Adafruit IO REST API
-    specs:
-      - type: openapi
-        repo: adafruit/io-api
-        path: v2.json
-        output: companies/providers/adafruit/openapi/adafruit.json
-  - name: shinesolutions
-    display_name: Adobe Experience Manager (AEM) API
-    specs:
-      - type: openapi
-        repo: shinesolutions/swagger-aem
-        path: conf/api.yml
-        output: companies/providers/shinesolutions/openapi/shinesolutions.yaml
-  - name: adyen
-    display_name: Account API
-    specs:
-      - type: openapi
-        repo: Adyen/adyen-openapi
-        path: json/AccountService-v6.json
-        output: companies/providers/adyen/openapi/adyen.json
-  - name: akeneo
-    display_name: Akeneo PIM REST API
-    specs:
-      - type: openapi
-        repo: akeneo/pim-api-docs
-        path: content/swagger/akeneo-web-api.json
-        output: companies/providers/akeneo/openapi/akeneo.json
-  - name: amadeus4dev
-    display_name: Airline Code Lookup API
-    specs:
-      - type: openapi
-        repo: amadeus4dev/amadeus-open-api-specification
-        path: spec/json/AirlineCodeLookUp_v1_swagger_specification.json
-        output: companies/providers/amadeus4dev/openapi/amadeus4dev.json
-  - name: aws
-    display_name: AWS Migration Hub
-    specs:
-      - type: openapi
-        repo: aws/aws-sdk-js
-        path: apis/AWSMigrationHub-2017-05-31.normal.json
-        output: companies/providers/aws/openapi/aws.json
-  - name: anchore
-    display_name: Anchore Engine API Server
-    specs:
-      - type: openapi
-        repo: anchore/anchore-engine
-        path: anchore_engine/services/apiext/swagger/swagger.yaml
-        output: companies/providers/anchore/openapi/anchore.yaml
-  - name: apache
-    display_name: Qakka
-    specs:
-      - type: openapi
-        repo: apache/usergrid-qakka
-        path: docs/swagger.json
-        output: companies/providers/apache/openapi/apache.json
-  - name: apicurio
-    display_name: Apicurio Registry API [v2]
-    specs:
-      - type: openapi
-        repo: Apicurio/apicurio-registry
-        path: app/src/main/resources-unfiltered/META-INF/resources/api-specifications/registry/v2/openapi.json
-        output: companies/providers/apicurio/openapi/apicurio.json
-  - name: apideck-libraries
-    display_name: Accounting API
-    specs:
-      - type: openapi
-        repo: apideck-libraries/openapi-specs
-        path: accounting.yml
-        output: companies/providers/apideck-libraries/openapi/apideck-libraries.yaml
-  - name: apigee
-    display_name: Registry API
-    specs:
-      - type: openapi
-        repo: apigee/registry
-        path: openapi.yaml
-        output: companies/providers/apigee/openapi/apigee.yaml
-  - name: mermade
-    display_name: APIMATIC API Transformer
-    specs:
-      - type: openapi
-        repo: Mermade/open_api_specifications
-        path: APIMATIC%20API%20Transformer/swagger.json
-        output: companies/providers/mermade/openapi/mermade.json
-  - name: kevinoid
-    display_name: AppVeyor REST API
-    specs:
-      - type: openapi
-        repo: kevinoid/appveyor-swagger
-        path: swagger.yaml
-        output: companies/providers/kevinoid/openapi/kevinoid.yaml
-  - name: archivelabs
-    display_name: Search Services
-    specs:
-      - type: openapi
-        repo: ArchiveLabs/api.archive.org
-        path: swagger/search.yaml
-        output: companies/providers/archivelabs/openapi/archivelabs.yaml
-  - name: asana
-    display_name: Asana
-    specs:
-      - type: openapi
-        repo: Asana/developer-docs
-        path: defs/asana_oas.yaml
-        output: companies/providers/asana/openapi/asana.yaml
-  - name: albertsuarez
-    display_name: SearchLy API v1
-    specs:
-      - type: openapi
-        repo: AlbertSuarez/searchly
-        path: src/searchly/static/openapi/openapi_v1.yaml
-        output: companies/providers/albertsuarez/openapi/albertsuarez.yaml
-  - name: axesso
-    display_name: Axesso Api
-    specs:
-      - type: openapi
-        repo: Axesso/axesso-java-client
-        path: swagger/axessor_api_def_swagger.yaml
-        output: companies/providers/axesso/openapi/axesso.yaml
-  - name: azure
-    display_name: Azure Enterprise Knowledge Graph Service
-    specs:
-      - type: openapi
-        repo: Azure/azure-rest-api-specs
-        path: specification/EnterpriseKnowledgeGraph/resource-manager/Microsoft.EnterpriseKnowledgeGraph/preview/2018-12-03/EnterpriseKnowledgeGraphSwagger.json
-        output: companies/providers/azure/openapi/azure.json
-  - name: bcgov
-    display_name: BC Laws
-    specs:
-      - type: openapi
-        repo: bcgov/api-specs
-        path: bclaws/bclaws.json
-        output: companies/providers/bcgov/openapi/bcgov.json
-  - name: betfair
-    display_name: "Betfair: Exchange Streaming API"
-    specs:
-      - type: openapi
-        repo: betfair/stream-api-sample-code
-        path: ESASwaggerSchema.json
-        output: companies/providers/betfair/openapi/betfair.json
-  - name: botify-labs
-    display_name: Botify API
-    specs:
-      - type: openapi
-        repo: botify-labs/botify-sdk-js
-        path: swagger.json
-        output: companies/providers/botify-labs/openapi/botify-labs.json
-  - name: brandlovers
-    display_name: BrandLovers Marketplace API V1
-    specs:
-      - type: openapi
-        repo: brandlovers/marketplace-api-documentation
-        path: brandlovers-marketplace-api-v1.json
-        output: companies/providers/brandlovers/openapi/brandlovers.json
-  - name: juliensobrier
-    display_name: Browshot API
-    specs:
-      - type: openapi
-        repo: juliensobrier/browshot-api-spec
-        path: browshot.yaml
-        output: companies/providers/juliensobrier/openapi/juliensobrier.yaml
-  - name: apis-guru
-    display_name: Bufferapp
-    specs:
-      - type: openapi
-        repo: APIs-guru/unofficial_openapi_specs
-        path: bufferapp.com/1/swagger.yaml
-        output: companies/providers/apis-guru/openapi/apis-guru.yaml
-  - name: bungie-net
-    display_name: Bungie.Net API
-    specs:
-      - type: openapi
-        repo: Bungie-net/api
-        path: openapi-2.json
-        output: companies/providers/bungie-net/openapi/bungie-net.json
-  - name: bunq
-    display_name: bunq API
-    specs:
-      - type: openapi
-        repo: bunq/doc
-        path: swagger.json
-        output: companies/providers/bunq/openapi/bunq.json
-  - name: aijaz
-    display_name: API for the COVID-19 Tracking QR Code Signin Server.
-    specs:
-      - type: openapi
-        repo: aijaz/qrCodeSigninServer
-        path: openapi.yaml
-        output: companies/providers/aijaz/openapi/aijaz.yaml
-  - name: chompfoods
-    display_name: Chomp Food Database API Documentation
-    specs:
-      - type: openapi
-        repo: chompfoods/examples
-        path: chomp-Chomp-1.0.0-oas3-swagger.json
-        output: companies/providers/chompfoods/openapi/chompfoods.json
-  - name: kamikazechaser
-    display_name: CircleCI REST API
-    specs:
-      - type: openapi
-        repo: kamikazechaser/spec-circleci
-        path: swagger.yml
-        output: companies/providers/kamikazechaser/openapi/kamikazechaser.yaml
-  - name: clever
-    display_name: Data API
-    specs:
-      - type: openapi
-        repo: Clever/swagger-api
-        path: v1.2.yml
-        output: companies/providers/clever/openapi/clever.yaml
-  - name: zhuowei
-    display_name: Clubhouse API
-    specs:
-      - type: openapi
-        repo: zhuowei/ClubhouseAPI
-        path: doc/openapi.yaml
-        output: companies/providers/zhuowei/openapi/zhuowei.yaml
-  - name: codatio
-    display_name: Accounting API
-    specs:
-      - type: openapi
-        repo: codatio/oas
-        path: json/Codat-Accounting.json
-        output: companies/providers/codatio/openapi/codatio.json
-  - name: meodai
-    display_name: Color Name API
-    specs:
-      - type: openapi
-        repo: meodai/color-name-api
-        path: color-names-v1-OpenAPI.yml
-        output: companies/providers/meodai/openapi/meodai.yaml
-  - name: cyberark
-    display_name: Conjur
-    specs:
-      - type: openapi
-        repo: cyberark/conjur-openapi-spec
-        path: spec/openapi.yml
-        output: companies/providers/cyberark/openapi/cyberark.yaml
-  - name: chocobozzz
-    display_name: PeerTube
-    specs:
-      - type: openapi
-        repo: Chocobozzz/PeerTube
-        path: support/doc/api/openapi.yaml
-        output: companies/providers/chocobozzz/openapi/chocobozzz.yaml
-  - name: forem
-    display_name: Forem API V1
-    specs:
-      - type: openapi
-        repo: forem/forem
-        path: swagger/v1/api_v1.json
-        output: companies/providers/forem/openapi/forem.json
-  - name: digitallinguistics
-    display_name: DLx
-    specs:
-      - type: openapi
-        repo: digitallinguistics/api
-        path: public/swagger/swagger.json
-        output: companies/providers/digitallinguistics/openapi/digitallinguistics.json
-  - name: docker
-    display_name: Docker Engine API
-    specs:
-      - type: openapi
-        repo: docker/go-docker
-        path: api/swagger.yaml
-        output: companies/providers/docker/openapi/docker.yaml
-  - name: docusign
-    display_name: DocuSign REST API
-    specs:
-      - type: openapi
-        repo: docusign/eSign-OpenAPI-Specification
-        path: esignature.rest.swagger-v2.1.json
-        output: companies/providers/docusign/openapi/docusign.json
-  - name: faretrotter
-    display_name: Faretrotter Travel API
-    specs:
-      - type: openapi
-        repo: Faretrotter/api
-        path: docs/oas20.yaml
-        output: companies/providers/faretrotter/openapi/faretrotter.yaml
-  - name: firefinancialservices
-    display_name: Fire Financial Services Business API
-    specs:
-      - type: openapi
-        repo: firefinancialservices/fire-business-api-openapi
-        path: fire-business-api-v1.yaml
-        output: companies/providers/firefinancialservices/openapi/firefinancialservices.yaml
-  - name: flickr
-    display_name: Flickr API Schema
-    specs:
-      - type: openapi
-        repo: flickr/flickr-api-swagger
-        path: dist/schema.json
-        output: companies/providers/flickr/openapi/flickr.json
-  - name: faragorn
-    display_name: Giphy API
-    specs:
-      - type: openapi
-        repo: faragorn/open-api-specs
-        path: specs/giphy_api/1.0/index.yml
-        output: companies/providers/faragorn/openapi/faragorn.yaml
-  - name: greenpeace
-    display_name: Greenwire Public API
-    specs:
-      - type: openapi
-        repo: greenpeace/ggw_api_test
-        path: swagger.yaml
-        output: companies/providers/greenpeace/openapi/greenpeace.yaml
-  - name: oeklo
-    display_name: GSMTasks Project API
-    specs:
-      - type: openapi
-        repo: oeklo/gsmtasks-schema
-        path: GSMTasks.yaml
-        output: companies/providers/oeklo/openapi/oeklo.yaml
-  - name: icons8
-    display_name: Use a [New Version](https://icons8.github.io/icons8-docs/) Instead
-    specs:
-      - type: openapi
-        repo: icons8/api-docs
-        path: apiary.apib
-        output: companies/providers/icons8/openapi/icons8.json
-  - name: darklynx
-    display_name: Instagram API
-    specs:
-      - type: openapi
-        repo: darklynx/swagger-api-collection
-        path: api/yaml/instagram.yaml
-        output: companies/providers/darklynx/openapi/darklynx.yaml
+- name: stripe
+  display_name: Stripe
+  specs:
+  - type: openapi
+    repo: stripe/openapi
+    path: openapi/spec3.json
+    output: companies/providers/stripe/openapi/stripe.openapi.json
+- name: twilio
+  display_name: Twilio
+  specs:
+  - type: openapi
+    repo: twilio/twilio-oai
+    path_pattern: spec/json
+    output_dir: companies/providers/twilio/openapi/
+- name: github
+  display_name: GitHub
+  specs:
+  - type: openapi
+    repo: github/rest-api-description
+    path: descriptions/api.github.com/api.github.com.json
+    output: companies/providers/github/openapi/github.openapi.json
+- name: slack
+  display_name: Slack
+  specs:
+  - type: openapi
+    repo: slackapi/slack-api-specs
+    path: web-api/slack_web_openapi_v2.json
+    output: companies/providers/slack/openapi/slack.openapi.json
+- name: sendgrid
+  display_name: SendGrid
+  specs:
+  - type: openapi
+    repo: twilio/sendgrid-oai
+    path_pattern: spec/json
+    output_dir: companies/providers/sendgrid/openapi/
+- name: digitalocean
+  display_name: DigitalOcean
+  specs:
+  - type: openapi
+    repo: digitalocean/openapi
+    path: specification/DigitalOcean-public.v2.yaml
+    output: companies/providers/digitalocean/openapi/digitalocean.openapi.yaml
+- name: netlify
+  display_name: Netlify
+  specs:
+  - type: openapi
+    repo: netlify/open-api
+    path: swagger.yml
+    output: companies/providers/netlify/openapi/netlify.openapi.yaml
+- name: pagerduty
+  display_name: PagerDuty
+  specs:
+  - type: openapi
+    repo: PagerDuty/api-schema
+    path: REST/openapiv3.json
+    output: companies/providers/pagerduty/openapi/pagerduty.openapi.json
+- name: shopify
+  display_name: Shopify
+  specs:
+  - type: graphql
+    repo: Shopify/graphql-design-tutorial
+    path: README.md
+    output: companies/providers/shopify/graphql/.keep
+- name: google
+  display_name: Google
+  specs:
+  - type: grpc
+    repo: googleapis/googleapis
+    path_pattern: google/pubsub/v1
+    output_dir: companies/providers/google/grpc/pubsub_v1/
+- name: authentiqid
+  display_name: Authentiq API
+  specs:
+  - type: openapi
+    repo: AuthentiqID/authentiq-docs
+    path: docs/swagger/issuer.yaml
+    output: companies/providers/authentiqid/openapi/authentiqid.yaml
+- name: ably
+  display_name: Platform API
+  specs:
+  - type: openapi
+    repo: ably/open-specs
+    path: definitions/platform-v1.yaml
+    output: companies/providers/ably/openapi/ably.yaml
+- name: adafruit
+  display_name: Adafruit IO REST API
+  specs:
+  - type: openapi
+    repo: adafruit/io-api
+    path: v2.json
+    output: companies/providers/adafruit/openapi/adafruit.json
+- name: shinesolutions
+  display_name: Adobe Experience Manager (AEM) API
+  specs:
+  - type: openapi
+    repo: shinesolutions/swagger-aem
+    path: conf/api.yml
+    output: companies/providers/shinesolutions/openapi/shinesolutions.yaml
+- name: adyen
+  display_name: Account API
+  specs:
+  - type: openapi
+    repo: Adyen/adyen-openapi
+    path: json/AccountService-v6.json
+    output: companies/providers/adyen/openapi/adyen.json
+- name: akeneo
+  display_name: Akeneo PIM REST API
+  specs:
+  - type: openapi
+    repo: akeneo/pim-api-docs
+    path: content/swagger/akeneo-web-api.json
+    output: companies/providers/akeneo/openapi/akeneo.json
+- name: amadeus4dev
+  display_name: Airline Code Lookup API
+  specs:
+  - type: openapi
+    repo: amadeus4dev/amadeus-open-api-specification
+    path: spec/json/AirlineCodeLookUp_v1_swagger_specification.json
+    output: companies/providers/amadeus4dev/openapi/amadeus4dev.json
+- name: aws
+  display_name: AWS Migration Hub
+  specs:
+  - type: openapi
+    repo: aws/aws-sdk-js
+    path: apis/AWSMigrationHub-2017-05-31.normal.json
+    output: companies/providers/aws/openapi/aws.json
+- name: anchore
+  display_name: Anchore Engine API Server
+  specs:
+  - type: openapi
+    repo: anchore/anchore-engine
+    path: anchore_engine/services/apiext/swagger/swagger.yaml
+    output: companies/providers/anchore/openapi/anchore.yaml
+- name: apache
+  display_name: Qakka
+  specs:
+  - type: openapi
+    repo: apache/usergrid-qakka
+    path: docs/swagger.json
+    output: companies/providers/apache/openapi/apache.json
+- name: apicurio
+  display_name: Apicurio Registry API [v2]
+  specs:
+  - type: openapi
+    repo: Apicurio/apicurio-registry
+    path: app/src/main/resources-unfiltered/META-INF/resources/api-specifications/registry/v2/openapi.json
+    output: companies/providers/apicurio/openapi/apicurio.json
+- name: apideck-libraries
+  display_name: Accounting API
+  specs:
+  - type: openapi
+    repo: apideck-libraries/openapi-specs
+    path: accounting.yml
+    output: companies/providers/apideck-libraries/openapi/apideck-libraries.yaml
+- name: apigee
+  display_name: Registry API
+  specs:
+  - type: openapi
+    repo: apigee/registry
+    path: openapi.yaml
+    output: companies/providers/apigee/openapi/apigee.yaml
+- name: mermade
+  display_name: APIMATIC API Transformer
+  specs:
+  - type: openapi
+    repo: Mermade/open_api_specifications
+    path: APIMATIC%20API%20Transformer/swagger.json
+    output: companies/providers/mermade/openapi/mermade.json
+- name: kevinoid
+  display_name: AppVeyor REST API
+  specs:
+  - type: openapi
+    repo: kevinoid/appveyor-swagger
+    path: swagger.yaml
+    output: companies/providers/kevinoid/openapi/kevinoid.yaml
+- name: archivelabs
+  display_name: Search Services
+  specs:
+  - type: openapi
+    repo: ArchiveLabs/api.archive.org
+    path: swagger/search.yaml
+    output: companies/providers/archivelabs/openapi/archivelabs.yaml
+- name: asana
+  display_name: Asana
+  specs:
+  - type: openapi
+    repo: Asana/developer-docs
+    path: defs/asana_oas.yaml
+    output: companies/providers/asana/openapi/asana.yaml
+- name: albertsuarez
+  display_name: SearchLy API v1
+  specs:
+  - type: openapi
+    repo: AlbertSuarez/searchly
+    path: src/searchly/static/openapi/openapi_v1.yaml
+    output: companies/providers/albertsuarez/openapi/albertsuarez.yaml
+- name: axesso
+  display_name: Axesso Api
+  specs:
+  - type: openapi
+    repo: Axesso/axesso-java-client
+    path: swagger/axessor_api_def_swagger.yaml
+    output: companies/providers/axesso/openapi/axesso.yaml
+- name: azure
+  display_name: Azure Enterprise Knowledge Graph Service
+  specs:
+  - type: openapi
+    repo: Azure/azure-rest-api-specs
+    path: specification/EnterpriseKnowledgeGraph/resource-manager/Microsoft.EnterpriseKnowledgeGraph/preview/2018-12-03/EnterpriseKnowledgeGraphSwagger.json
+    output: companies/providers/azure/openapi/azure.json
+- name: bcgov
+  display_name: BC Laws
+  specs:
+  - type: openapi
+    repo: bcgov/api-specs
+    path: bclaws/bclaws.json
+    output: companies/providers/bcgov/openapi/bcgov.json
+- name: betfair
+  display_name: 'Betfair: Exchange Streaming API'
+  specs:
+  - type: openapi
+    repo: betfair/stream-api-sample-code
+    path: ESASwaggerSchema.json
+    output: companies/providers/betfair/openapi/betfair.json
+- name: botify-labs
+  display_name: Botify API
+  specs:
+  - type: openapi
+    repo: botify-labs/botify-sdk-js
+    path: swagger.json
+    output: companies/providers/botify-labs/openapi/botify-labs.json
+- name: brandlovers
+  display_name: BrandLovers Marketplace API V1
+  specs:
+  - type: openapi
+    repo: brandlovers/marketplace-api-documentation
+    path: brandlovers-marketplace-api-v1.json
+    output: companies/providers/brandlovers/openapi/brandlovers.json
+- name: juliensobrier
+  display_name: Browshot API
+  specs:
+  - type: openapi
+    repo: juliensobrier/browshot-api-spec
+    path: browshot.yaml
+    output: companies/providers/juliensobrier/openapi/juliensobrier.yaml
+- name: apis-guru
+  display_name: Bufferapp
+  specs:
+  - type: openapi
+    repo: APIs-guru/unofficial_openapi_specs
+    path: bufferapp.com/1/swagger.yaml
+    output: companies/providers/apis-guru/openapi/apis-guru.yaml
+- name: bungie-net
+  display_name: Bungie.Net API
+  specs:
+  - type: openapi
+    repo: Bungie-net/api
+    path: openapi-2.json
+    output: companies/providers/bungie-net/openapi/bungie-net.json
+- name: bunq
+  display_name: bunq API
+  specs:
+  - type: openapi
+    repo: bunq/doc
+    path: swagger.json
+    output: companies/providers/bunq/openapi/bunq.json
+- name: aijaz
+  display_name: API for the COVID-19 Tracking QR Code Signin Server.
+  specs:
+  - type: openapi
+    repo: aijaz/qrCodeSigninServer
+    path: openapi.yaml
+    output: companies/providers/aijaz/openapi/aijaz.yaml
+- name: chompfoods
+  display_name: Chomp Food Database API Documentation
+  specs:
+  - type: openapi
+    repo: chompfoods/examples
+    path: chomp-Chomp-1.0.0-oas3-swagger.json
+    output: companies/providers/chompfoods/openapi/chompfoods.json
+- name: kamikazechaser
+  display_name: CircleCI REST API
+  specs:
+  - type: openapi
+    repo: kamikazechaser/spec-circleci
+    path: swagger.yml
+    output: companies/providers/kamikazechaser/openapi/kamikazechaser.yaml
+- name: clever
+  display_name: Data API
+  specs:
+  - type: openapi
+    repo: Clever/swagger-api
+    path: v1.2.yml
+    output: companies/providers/clever/openapi/clever.yaml
+- name: zhuowei
+  display_name: Clubhouse API
+  specs:
+  - type: openapi
+    repo: zhuowei/ClubhouseAPI
+    path: doc/openapi.yaml
+    output: companies/providers/zhuowei/openapi/zhuowei.yaml
+- name: codatio
+  display_name: Accounting API
+  specs:
+  - type: openapi
+    repo: codatio/oas
+    path: json/Codat-Accounting.json
+    output: companies/providers/codatio/openapi/codatio.json
+- name: meodai
+  display_name: Color Name API
+  specs:
+  - type: openapi
+    repo: meodai/color-name-api
+    path: color-names-v1-OpenAPI.yml
+    output: companies/providers/meodai/openapi/meodai.yaml
+- name: cyberark
+  display_name: Conjur
+  specs:
+  - type: openapi
+    repo: cyberark/conjur-openapi-spec
+    path: spec/openapi.yml
+    output: companies/providers/cyberark/openapi/cyberark.yaml
+- name: chocobozzz
+  display_name: PeerTube
+  specs:
+  - type: openapi
+    repo: Chocobozzz/PeerTube
+    path: support/doc/api/openapi.yaml
+    output: companies/providers/chocobozzz/openapi/chocobozzz.yaml
+- name: forem
+  display_name: Forem API V1
+  specs:
+  - type: openapi
+    repo: forem/forem
+    path: swagger/v1/api_v1.json
+    output: companies/providers/forem/openapi/forem.json
+- name: digitallinguistics
+  display_name: DLx
+  specs:
+  - type: openapi
+    repo: digitallinguistics/api
+    path: public/swagger/swagger.json
+    output: companies/providers/digitallinguistics/openapi/digitallinguistics.json
+- name: docker
+  display_name: Docker Engine API
+  specs:
+  - type: openapi
+    repo: docker/go-docker
+    path: api/swagger.yaml
+    output: companies/providers/docker/openapi/docker.yaml
+- name: docusign
+  display_name: DocuSign REST API
+  specs:
+  - type: openapi
+    repo: docusign/eSign-OpenAPI-Specification
+    path: esignature.rest.swagger-v2.1.json
+    output: companies/providers/docusign/openapi/docusign.json
+- name: faretrotter
+  display_name: Faretrotter Travel API
+  specs:
+  - type: openapi
+    repo: Faretrotter/api
+    path: docs/oas20.yaml
+    output: companies/providers/faretrotter/openapi/faretrotter.yaml
+- name: firefinancialservices
+  display_name: Fire Financial Services Business API
+  specs:
+  - type: openapi
+    repo: firefinancialservices/fire-business-api-openapi
+    path: fire-business-api-v1.yaml
+    output: companies/providers/firefinancialservices/openapi/firefinancialservices.yaml
+- name: flickr
+  display_name: Flickr API Schema
+  specs:
+  - type: openapi
+    repo: flickr/flickr-api-swagger
+    path: dist/schema.json
+    output: companies/providers/flickr/openapi/flickr.json
+- name: faragorn
+  display_name: Giphy API
+  specs:
+  - type: openapi
+    repo: faragorn/open-api-specs
+    path: specs/giphy_api/1.0/index.yml
+    output: companies/providers/faragorn/openapi/faragorn.yaml
+- name: greenpeace
+  display_name: Greenwire Public API
+  specs:
+  - type: openapi
+    repo: greenpeace/ggw_api_test
+    path: swagger.yaml
+    output: companies/providers/greenpeace/openapi/greenpeace.yaml
+- name: oeklo
+  display_name: GSMTasks Project API
+  specs:
+  - type: openapi
+    repo: oeklo/gsmtasks-schema
+    path: GSMTasks.yaml
+    output: companies/providers/oeklo/openapi/oeklo.yaml
+- name: icons8
+  display_name: Use a [New Version](https://icons8.github.io/icons8-docs/) Instead
+  specs:
+  - type: openapi
+    repo: icons8/api-docs
+    path: apiary.apib
+    output: companies/providers/icons8/openapi/icons8.json
+- name: darklynx
+  display_name: Instagram API
+  specs:
+  - type: openapi
+    repo: darklynx/swagger-api-collection
+    path: api/yaml/instagram.yaml
+    output: companies/providers/darklynx/openapi/darklynx.yaml

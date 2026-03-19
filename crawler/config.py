@@ -6,7 +6,6 @@ from pydantic import BaseModel, field_validator
 
 REPO_ROOT = Path(__file__).parent.parent
 COMPANIES_YAML = REPO_ROOT / "provider.companies.yaml"
-CONSUMERS_YAML = REPO_ROOT / "consumer.companies.yaml"
 
 
 class SpecConfig(BaseModel):
@@ -25,67 +24,17 @@ class SpecConfig(BaseModel):
         return v
 
 
-class ConsumerConfig(BaseModel):
-    query: str  # GitHub Code Search query string
-
-
 class CompanyConfig(BaseModel):
     name: str
     display_name: str
     specs: List[SpecConfig]
-    consumers: List[ConsumerConfig] = []
 
 
 class CompaniesRegistry(BaseModel):
     companies: List[CompanyConfig]
 
 
-class RegisteredConsumer(BaseModel):
-    repo: str                       # "owner/repo"
-    companies: List[str]            # company names from companies.yaml
-    contact: Optional[str] = None   # optional contact email
-
-
-class ConsumerRegistry(BaseModel):
-    consumers: List[RegisteredConsumer] = []
-
-
 def load_registry() -> CompaniesRegistry:
     with open(COMPANIES_YAML) as f:
         data = yaml.safe_load(f)
     return CompaniesRegistry.model_validate(data)
-
-
-def load_consumer_registry() -> ConsumerRegistry:
-    if not CONSUMERS_YAML.exists():
-        return ConsumerRegistry()
-    with open(CONSUMERS_YAML) as f:
-        data = yaml.safe_load(f) or {}
-    return ConsumerRegistry.model_validate(data)
-
-
-def register_consumer(repo: str, company: str) -> None:
-    """Add repo/company to consumer.companies.yaml if not already present."""
-    if CONSUMERS_YAML.exists():
-        with open(CONSUMERS_YAML) as f:
-            data = yaml.safe_load(f) or {}
-        raw = CONSUMERS_YAML.read_text()
-    else:
-        data = {}
-        raw = ""
-
-    consumers = data.get("consumers", [])
-    for entry in consumers:
-        if entry.get("repo") == repo:
-            if company not in entry.get("companies", []):
-                entry["companies"].append(company)
-                with open(CONSUMERS_YAML, "w") as f:
-                    yaml.dump(data, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
-                print(f"  [registry] Added {company} to existing entry for {repo}")
-            else:
-                print(f"  [registry] {repo} → {company} already registered — skipping")
-            return
-
-    new_entry = f"\n  - repo: {repo}\n    companies:\n      - {company}\n"
-    CONSUMERS_YAML.write_text(raw + new_entry if raw.endswith("\n") else raw + "\n" + new_entry)
-    print(f"  [registry] Registered {repo} → {company}")

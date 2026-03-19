@@ -10,16 +10,12 @@ Anyone can add a new API provider by opening a pull request. The crawler will pi
 
 ```yaml
 - name: acme                          # unique slug (lowercase, no spaces)
-  display_name: Acme Corp             # human-readable name used in issue titles
+  display_name: Acme Corp             # human-readable name
   specs:
     - type: openapi                   # openapi | graphql | grpc
       repo: acme/openapi-spec         # GitHub repo containing the spec
       path: spec/openapi.json         # path to the spec file within that repo
       output: companies/providers/acme/openapi/acme.openapi.json
-  consumers:
-    - query: "acme-sdk language:python"
-    - query: "require(\"acme\") language:javascript"
-    - query: "github.com/acme/acme-go language:go"
 ```
 
 **3. Open a pull request.** The next crawler run will fetch the spec and commit it.
@@ -36,16 +32,10 @@ specs:
     output_dir: companies/providers/twilio/openapi/
 ```
 
-## Consumer search queries
+## Spec types
 
-The `consumers` list controls how GitHub Code Search discovers repos to notify. Write queries that match files importing the provider's SDK:
-
-| Language | Example query |
-|----------|--------------|
-| Python | `"acme-sdk" language:python` |
-| JavaScript | `require("acme") language:javascript` |
-| Go | `"github.com/acme/acme-go" language:go` |
-| Ruby | `gem "acme" language:ruby` |
-| Java | `"com.acme:acme-sdk" language:java` |
-
-Repos registered in [`consumer.companies.yaml`](consumers) are always scanned by the `scan-consumers` workflow. New repos are discovered automatically by the `discover-consumers` workflow using these queries.
+| `type` | File extensions | Example |
+|--------|----------------|---------|
+| `openapi` | `.json`, `.yaml` | Stripe, Twilio, GitHub |
+| `graphql` | `.graphql`, `.gql`, `.sdl` | Shopify |
+| `grpc` | `.proto` | Google Pub/Sub |

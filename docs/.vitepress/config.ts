@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'DriftaBot Registry',
-  description: 'The central, always-up-to-date repository for public API specifications — with automatic breaking change detection and consumer notifications.',
+  description: 'The central, always-up-to-date repository for public API specifications — with automatic breaking change detection.',
   base: '/registry/',
 
   themeConfig: {
@@ -24,17 +24,9 @@ export default defineConfig({
         ],
       },
       {
-        text: 'For API Providers',
+        text: 'Providers',
         items: [
           { text: 'Add a Provider', link: '/providers' },
-        ],
-      },
-      {
-        text: 'For API Consumers',
-        items: [
-          { text: 'Register for Notifications', link: '/consumers' },
-          { text: 'Consumer Issues', link: '/consumer-issues' },
-          { text: 'Check Your Repo', link: '/check-consumer' },
         ],
       },
       {
