@@ -1,0 +1,813 @@
+{
+	"info": {
+		"_postman_id": "47db4ce3-4ab3-4b53-9b2e-a4ed69e02dc4",
+		"name": "IPQualityScore API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "18358407-47db4ce3-4ab3-4b53-9b2e-a4ed69e02dc4"
+	},
+	"item": [
+		{
+			"name": "email_validation",
+			"item": [
+				{
+					"name": "Email Validation",
+					"id": "df020929-dadc-4806-8c41-27083a9fa96d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/json/email/:YOUR_API_KEY_HERE/:USER_EMAIL_HERE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"json",
+								"email",
+								":YOUR_API_KEY_HERE",
+								":USER_EMAIL_HERE"
+							],
+							"variable": [
+								{
+									"key": "YOUR_API_KEY_HERE",
+									"value": "asd24#sdfs322#",
+									"description": "(Required) YOUR_API_KEY_HERE"
+								},
+								{
+									"key": "USER_EMAIL_HERE",
+									"value": "example@example.com",
+									"description": "(Required) USER_EMAIL_HERE"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "d8071413-9536-475d-886a-61807a90c196",
+							"name": "Successful response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/email/:YOUR_API_KEY_HERE/:USER_EMAIL_HERE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"email",
+										":YOUR_API_KEY_HERE",
+										":USER_EMAIL_HERE"
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "USER_EMAIL_HERE",
+											"value": "example@example.com",
+											"description": "(Required) USER_EMAIL_HERE"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Success.\",\n  \"success\": true,\n  \"valid\": true,\n  \"disposable\": false,\n  \"smtp_score\": 5,\n  \"overall_score\": 2,\n  \"first_name\": \"Success.\",\n  \"generic\": false,\n  \"common\": false,\n  \"dns_valid\": true,\n  \"honeypot\": false,\n  \"deliverability\": \"high.\",\n  \"frequent_complainer\": false,\n  \"spam_trap_score\": \"none.\",\n  \"catch_all\": true,\n  \"timed_out\": true,\n  \"suspect\": false,\n  \"recent_abuse\": false,\n  \"fraud_score\": 1,\n  \"suggested_domain\": \"N/A\",\n  \"leaked\": false,\n  \"domain_age\": {\n    \"human\": \"9 years ago\",\n    \"timestamp\": 1378837133,\n    \"iso\": \"2013-09-10T14:18:53-04:00\"\n  },\n  \"first_seen\": {\n    \"human\": \"9 years ago\",\n    \"timestamp\": 1378837133,\n    \"iso\": \"2013-09-10T14:18:53-04:00\"\n  },\n  \"sanitized_email\": \"example@example.com\",\n  \"domain_velocity\": \"none\",\n  \"user_activity\": \"Enterprise L4+ required.\",\n  \"associated_names\": {\n    \"status\": \"Enterprise Plus or higher required.\",\n    \"names\": [\n      \"names\",\n      \"names\"\n    ]\n  },\n  \"associated_phone_numbers\": {\n    \"status\": \"Enterprise Plus or higher required.\",\n    \"phone_numbers\": [\n      \"phone_numbers\",\n      \"phone_numbers\"\n    ]\n  },\n  \"request_id\": \"8cib1Ircsadw3gB\"\n}"
+						},
+						{
+							"id": "6834c0c4-cbe3-462d-bd21-7b223d0dd5fd",
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/email/:YOUR_API_KEY_HERE/:USER_EMAIL_HERE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"email",
+										":YOUR_API_KEY_HERE",
+										":USER_EMAIL_HERE"
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "USER_EMAIL_HERE",
+											"value": "example@example.com",
+											"description": "(Required) USER_EMAIL_HERE"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"You have insufficient credits to make this query. Please contact IPQualityScore support if this error persists.\",\n  \"request_id\": \"4OTORR352FU0p\"\n}"
+						},
+						{
+							"id": "06c0f94d-a0d0-446c-a49b-675b7c246aa2",
+							"name": "Internal Server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/email/:YOUR_API_KEY_HERE/:USER_EMAIL_HERE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"email",
+										":YOUR_API_KEY_HERE",
+										":USER_EMAIL_HERE"
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "USER_EMAIL_HERE",
+											"value": "example@example.com",
+											"description": "(Required) USER_EMAIL_HERE"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"title\": \"Internal server error\",\n  \"detail\": \"An exception has occurred on the server.\"\n}"
+						},
+						{
+							"id": "e2bb6df7-1f35-45b7-8b8f-f25a4f37168f",
+							"name": "Unexpected error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/email/:YOUR_API_KEY_HERE/:USER_EMAIL_HERE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"email",
+										":YOUR_API_KEY_HERE",
+										":USER_EMAIL_HERE"
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "USER_EMAIL_HERE",
+											"value": "example@example.com",
+											"description": "(Required) USER_EMAIL_HERE"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"You have insufficient credits to make this query. Please contact IPQualityScore support if this error persists.\",\n  \"request_id\": \"4OTORR352FU0p\"\n}"
+						}
+					]
+				}
+			],
+			"id": "5083344f-ae81-4f19-979d-382042b91845"
+		},
+		{
+			"name": "phone_validation",
+			"item": [
+				{
+					"name": "Phone Validation",
+					"id": "87b31db9-721f-42bf-8362-885d600e2a03",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/json/phone/:YOUR_API_KEY_HERE/:USER_PHONE_HERE?country=UK&country=UK",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"json",
+								"phone",
+								":YOUR_API_KEY_HERE",
+								":USER_PHONE_HERE"
+							],
+							"query": [
+								{
+									"key": "country",
+									"value": "UK",
+									"description": "country"
+								},
+								{
+									"key": "country",
+									"value": "UK",
+									"description": "country"
+								}
+							],
+							"variable": [
+								{
+									"key": "YOUR_API_KEY_HERE",
+									"value": "asd24#sdfs322#",
+									"description": "(Required) YOUR_API_KEY_HERE"
+								},
+								{
+									"key": "USER_PHONE_HERE",
+									"value": "18007132618",
+									"description": "(Required) USER_PHONE_HERE"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "52042db8-e0d3-48bc-bd1c-f560d4979f2a",
+							"name": "Successful response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/phone/:YOUR_API_KEY_HERE/:USER_PHONE_HERE?country=UK&country=UK",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"phone",
+										":YOUR_API_KEY_HERE",
+										":USER_PHONE_HERE"
+									],
+									"query": [
+										{
+											"key": "country",
+											"value": "UK",
+											"description": "country"
+										},
+										{
+											"key": "country",
+											"value": "UK",
+											"description": "country"
+										}
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "USER_PHONE_HERE",
+											"value": "18007132618",
+											"description": "(Required) USER_PHONE_HERE"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Success.\",\n  \"success\": true,\n  \"formatted\": \"+3234232342\",\n  \"local_format\": \"(206) 456-3059\",\n  \"valid\": true,\n  \"fraud_score\": 100,\n  \"recent_abuse\": true,\n  \"VOIP\": true,\n  \"prepaid\": \"tempor ea proident quis\",\n  \"risky\": true,\n  \"active\": true,\n  \"carrier\": \"ONVOY, LLC\",\n  \"line_type\": \"VOIP\",\n  \"country\": \"US\",\n  \"city\": \"SEATTLE\",\n  \"zip_code\": \"98104\",\n  \"region\": \"WA\",\n  \"dialing_code\": 1,\n  \"active_status\": \"N/A\",\n  \"sms_domain\": \"N/A\",\n  \"associated_email_addresses\": {\n    \"status\": \"No associated emails found.\",\n    \"emails\": [\n      \"names\",\n      \"names\"\n    ]\n  },\n  \"user_activity\": \"Enterprise L4+ required.\",\n  \"mnc\": \"N/A\",\n  \"mcc\": \"N/A\",\n  \"leaked\": false,\n  \"spammer\": false,\n  \"request_id\": \"8ctDi1gwuP\",\n  \"name\": \"N/A\",\n  \"timezone\": \"America/Los_Angeles\",\n  \"do_not_call\": false,\n  \"sms_email\": \"N/A\"\n}"
+						},
+						{
+							"id": "a14bde38-21e1-48b7-84b9-64e14ca3f5a6",
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/phone/:YOUR_API_KEY_HERE/:USER_PHONE_HERE?country=UK&country=UK",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"phone",
+										":YOUR_API_KEY_HERE",
+										":USER_PHONE_HERE"
+									],
+									"query": [
+										{
+											"key": "country",
+											"value": "UK",
+											"description": "country"
+										},
+										{
+											"key": "country",
+											"value": "UK",
+											"description": "country"
+										}
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "USER_PHONE_HERE",
+											"value": "18007132618",
+											"description": "(Required) USER_PHONE_HERE"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"You have insufficient credits to make this query. Please contact IPQualityScore support if this error persists.\",\n  \"request_id\": \"4OTORR352FU0p\"\n}"
+						},
+						{
+							"id": "5489df6d-a3f8-4968-93d3-d2f05c160582",
+							"name": "Internal Server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/phone/:YOUR_API_KEY_HERE/:USER_PHONE_HERE?country=UK&country=UK",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"phone",
+										":YOUR_API_KEY_HERE",
+										":USER_PHONE_HERE"
+									],
+									"query": [
+										{
+											"key": "country",
+											"value": "UK",
+											"description": "country"
+										},
+										{
+											"key": "country",
+											"value": "UK",
+											"description": "country"
+										}
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "USER_PHONE_HERE",
+											"value": "18007132618",
+											"description": "(Required) USER_PHONE_HERE"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"title\": \"Internal server error\",\n  \"detail\": \"An exception has occurred on the server.\"\n}"
+						},
+						{
+							"id": "ac54a3bd-36e2-4d6c-bdca-ea52a6b29153",
+							"name": "Unexpected error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/phone/:YOUR_API_KEY_HERE/:USER_PHONE_HERE?country=UK&country=UK",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"phone",
+										":YOUR_API_KEY_HERE",
+										":USER_PHONE_HERE"
+									],
+									"query": [
+										{
+											"key": "country",
+											"value": "UK",
+											"description": "country"
+										},
+										{
+											"key": "country",
+											"value": "UK",
+											"description": "country"
+										}
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "USER_PHONE_HERE",
+											"value": "18007132618",
+											"description": "(Required) USER_PHONE_HERE"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"You have insufficient credits to make this query. Please contact IPQualityScore support if this error persists.\",\n  \"request_id\": \"4OTORR352FU0p\"\n}"
+						}
+					]
+				}
+			],
+			"id": "de18d5b7-7f92-4bf3-91dc-464355f095b2"
+		},
+		{
+			"name": "malicious_url_scanner",
+			"item": [
+				{
+					"name": "Malicious URL Scanner",
+					"id": "43d82604-0160-4d14-821c-7e2a762acb48",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/json/url/:YOUR_API_KEY_HERE/:URL_HERE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"json",
+								"url",
+								":YOUR_API_KEY_HERE",
+								":URL_HERE"
+							],
+							"variable": [
+								{
+									"key": "YOUR_API_KEY_HERE",
+									"value": "asd24#sdfs322#",
+									"description": "(Required) YOUR_API_KEY_HERE"
+								},
+								{
+									"key": "URL_HERE",
+									"value": "https%3A%2F%2Fgoogle.com",
+									"description": "(Required) URL_HERE"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"id": "a95e3ce2-7e49-4d1a-96a9-c1adc2f4830c",
+							"name": "Successful response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/url/:YOUR_API_KEY_HERE/:URL_HERE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"url",
+										":YOUR_API_KEY_HERE",
+										":URL_HERE"
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "URL_HERE",
+											"value": "https%3A%2F%2Fgoogle.com",
+											"description": "(Required) URL_HERE"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Success.\",\n  \"success\": true,\n  \"unsafe\": true,\n  \"domain\": \"google.com\",\n  \"ip_address\": \"172.217.7.206\",\n  \"server\": \"nginx\",\n  \"content_type\": \"text/html; charset=UTF-8\",\n  \"status_code\": 200,\n  \"page_size\": 68553,\n  \"domain_rank\": 1,\n  \"dns_valid\": true,\n  \"parking\": false,\n  \"spamming\": false,\n  \"malware\": false,\n  \"phishing\": false,\n  \"suspicious\": false,\n  \"adult\": false,\n  \"risk_score\": 0,\n  \"domain_age\": {\n    \"human\": \"3 months ago\",\n    \"timestamp\": 1568061634,\n    \"iso\": \"2019-09-09T16:40:34-04:00\"\n  },\n  \"category\": \"Search Engine\",\n  \"request_id\": \"4ZGSfWu9RDf3oH\"\n}"
+						},
+						{
+							"id": "d62e1ced-a3e2-4ac2-bd3d-b5193fada7af",
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/url/:YOUR_API_KEY_HERE/:URL_HERE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"url",
+										":YOUR_API_KEY_HERE",
+										":URL_HERE"
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "URL_HERE",
+											"value": "https%3A%2F%2Fgoogle.com",
+											"description": "(Required) URL_HERE"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"You have insufficient credits to make this query. Please contact IPQualityScore support if this error persists.\",\n  \"request_id\": \"4OTORR352FU0p\"\n}"
+						},
+						{
+							"id": "d3663413-d7fa-449e-a11d-88aea70b6e04",
+							"name": "Internal Server error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/url/:YOUR_API_KEY_HERE/:URL_HERE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"url",
+										":YOUR_API_KEY_HERE",
+										":URL_HERE"
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "URL_HERE",
+											"value": "https%3A%2F%2Fgoogle.com",
+											"description": "(Required) URL_HERE"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"title\": \"Internal server error\",\n  \"detail\": \"An exception has occurred on the server.\"\n}"
+						},
+						{
+							"id": "423bffa7-3837-4d42-b714-8a1b75ae7cc1",
+							"name": "Unexpected error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/json/url/:YOUR_API_KEY_HERE/:URL_HERE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"json",
+										"url",
+										":YOUR_API_KEY_HERE",
+										":URL_HERE"
+									],
+									"variable": [
+										{
+											"key": "YOUR_API_KEY_HERE",
+											"value": "asd24#sdfs322#",
+											"description": "(Required) YOUR_API_KEY_HERE"
+										},
+										{
+											"key": "URL_HERE",
+											"value": "https%3A%2F%2Fgoogle.com",
+											"description": "(Required) URL_HERE"
+										}
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"success\": false,\n  \"message\": \"You have insufficient credits to make this query. Please contact IPQualityScore support if this error persists.\",\n  \"request_id\": \"4OTORR352FU0p\"\n}"
+						}
+					]
+				}
+			],
+			"id": "66790ce6-2bd6-41af-b12f-6c8ebc915df1"
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "<Basic Auth Username>",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "<Basic Auth Password>",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"id": "d0874930-6ca1-4df7-aa71-1c1cbbd57373",
+			"key": "baseUrl",
+			"value": "https://ipqualityscore.com/api",
+			"type": "string"
+		}
+	]
+}
