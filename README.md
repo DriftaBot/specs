@@ -25,7 +25,7 @@ The central, always-up-to-date repository for public API specifications from maj
 
 DriftaBot Registry ships with an [OpenClaw](https://docs.openclaw.ai/) skill and agent tool plugin so any OpenClaw agent can query providers and drift reports via natural language.
 
-**Files:** [`openclaw/`](openclaw/)
+**Files:** [`openclaw/`](openclaw/) · **ClawHub:** [clawhub.ai/pgomes13/driftabot](https://clawhub.ai/pgomes13/driftabot)
 
 | Capability | What it does |
 |------------|-------------|

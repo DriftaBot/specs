@@ -51,7 +51,7 @@ In GitHub Actions, `ANTHROPIC_API_KEY` is always passed so the agent runs. Local
 
 The [`openclaw/`](https://github.com/DriftaBot/registry/tree/main/openclaw) directory contains a ready-to-use [OpenClaw](https://docs.openclaw.ai/) skill and agent tool plugin. Once installed, any OpenClaw agent can answer questions about providers and breaking changes via natural language.
 
-**Skill** (`openclaw/skills/driftabot/SKILL.md`) — prompt-level instructions, no build step.
+**Skill** (`openclaw/skills/driftabot/SKILL.md`) — prompt-level instructions, no build step. Available on [ClawHub](https://clawhub.ai/pgomes13/driftabot).
 
 **Plugin** (`openclaw/plugins/driftabot-tool/`) — three structured tools:
 
