@@ -22,4 +22,6 @@ features:
     details: OpenAPI, GraphQL, and gRPC specs from Stripe, Twilio, GitHub, Slack, SendGrid, DigitalOcean, and dozens more — all in one place.
   - title: Open and extensible
     details: Add a new provider by opening a pull request. The crawler picks it up automatically on its next run.
+  - title: OpenClaw integration
+    details: Ships with a ready-to-use OpenClaw skill and agent tool plugin. Ask any OpenClaw agent "did Stripe's API break?" and it queries the registry in real time.
 ---
