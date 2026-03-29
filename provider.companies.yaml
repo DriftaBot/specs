@@ -412,122 +412,122 @@ companies:
     repo: darklynx/swagger-api-collection
     path: api/yaml/instagram.yaml
     output: companies/providers/darklynx/openapi/darklynx.yaml
-  - name: ipqualityscore
-    display_name: IPQualityScore API
-    specs:
-      - type: openapi
-        repo: IPQualityScore/IP_Quality_Score_API_Spec
-        path: postman/collections/IP%20API%20Spec%20Review%201.json
-        output: companies/providers/ipqualityscore/openapi/ipqualityscore.json
-  - name: ccouzens
-    display_name: Keycloak Admin REST API
-    specs:
-      - type: openapi
-        repo: ccouzens/keycloak-openapi
-        path: keycloak/10.0.json
-        output: companies/providers/ccouzens/openapi/ccouzens.json
-  - name: kubernetes
-    display_name: Kubernetes
-    specs:
-      - type: openapi
-        repo: kubernetes/kubernetes
-        path: api/openapi-spec/swagger.json
-        output: companies/providers/kubernetes/openapi/kubernetes.json
-  - name: landregistry
-    display_name: Deed API
-    specs:
-      - type: openapi
-        repo: LandRegistry/dm-deed-api
-        path: application/deed/schemas/deed-api.json
-        output: companies/providers/landregistry/openapi/landregistry.json
-  - name: lufthansaopenapi
-    display_name: LH Partner API
-    specs:
-      - type: openapi
-        repo: LufthansaOpenAPI/Swagger4Partners
-        path: LH-OpenAPI-Partners-Swagger2.json
-        output: companies/providers/lufthansaopenapi/openapi/lufthansaopenapi.json
-  - name: maif
-    display_name: Otoroshi Admin API
-    specs:
-      - type: openapi
-        repo: MAIF/otoroshi
-        path: docs/manual/code/swagger.json
-        output: companies/providers/maif/openapi/maif.json
-  - name: packom
-    display_name: M-Bus HTTPD API
-    specs:
-      - type: openapi
-        repo: packom/mbus-api
-        path: api/openapi.yaml
-        output: companies/providers/packom/openapi/packom.yaml
-  - name: dunglas
-    display_name: The Mercure protocol
-    specs:
-      - type: openapi
-        repo: dunglas/mercure
-        path: spec/openapi.yaml
-        output: companies/providers/dunglas/openapi/dunglas.yaml
-  - name: miataru
-    display_name: Miataru
-    specs:
-      - type: openapi
-        repo: miataru/miataru-protocol-specification
-        path: miataru-v1/api/swagger/swagger.yaml
-        output: companies/providers/miataru/openapi/miataru.yaml
-  - name: microcks
-    display_name: Microcks API v1.7
-    specs:
-      - type: openapi
-        repo: microcks/microcks
-        path: api/microcks-openapi-v1.7.yaml
-        output: companies/providers/microcks/openapi/microcks.yaml
-  - name: microsoftgraph
-    display_name: OData Service for namespace microsoft.graph
-    specs:
-      - type: openapi
-        repo: microsoftgraph/msgraph-metadata
-        path: openapi/v1.0/openapi.yaml
-        output: companies/providers/microsoftgraph/openapi/microsoftgraph.yaml
-  - name: kalebu
-    display_name: Mtaa API Documentation
-    specs:
-      - type: openapi
-        repo: Kalebu/mtaa-docs
-        path: openapi.yaml
-        output: companies/providers/kalebu/openapi/kalebu.yaml
-  - name: musixmatch
-    display_name: Musixmatch API
-    specs:
-      - type: openapi
-        repo: musixmatch/musixmatch-sdk
-        path: swagger/swagger.yaml
-        output: companies/providers/musixmatch/openapi/musixmatch.yaml
-  - name: danielwelch
-    display_name: NBA Stats API
-    specs:
-      - type: openapi
-        repo: danielwelch/little-pynny
-        path: little-pynny/swagger.json
-        output: companies/providers/danielwelch/openapi/danielwelch.json
-  - name: neblioteam
-    display_name: Neblio REST API Suite
-    specs:
-      - type: openapi
-        repo: NeblioTeam/neblio-api-swagger-docs
-        path: swagger.yaml
-        output: companies/providers/neblioteam/openapi/neblioteam.yaml
-  - name: cbornet
-    display_name: Netatmo
-    specs:
-      - type: openapi
-        repo: cbornet/netatmo-swagger-decl
-        path: spec/swagger.yaml
-        output: companies/providers/cbornet/openapi/cbornet.yaml
-  - name: nytimes
-    display_name: Archive API
-    specs:
-      - type: openapi
-        repo: nytimes/public_api_specs
-        path: archive_api/archive_api.json
-        output: companies/providers/nytimes/openapi/nytimes.json
+- name: ipqualityscore
+  display_name: IPQualityScore API
+  specs:
+    - type: openapi
+      repo: IPQualityScore/IP_Quality_Score_API_Spec
+      path: postman/collections/IP%20API%20Spec%20Review%201.json
+      output: companies/providers/ipqualityscore/openapi/ipqualityscore.json
+- name: ccouzens
+  display_name: Keycloak Admin REST API
+  specs:
+    - type: openapi
+      repo: ccouzens/keycloak-openapi
+      path: keycloak/10.0.json
+      output: companies/providers/ccouzens/openapi/ccouzens.json
+- name: kubernetes
+  display_name: Kubernetes
+  specs:
+    - type: openapi
+      repo: kubernetes/kubernetes
+      path: api/openapi-spec/swagger.json
+      output: companies/providers/kubernetes/openapi/kubernetes.json
+- name: landregistry
+  display_name: Deed API
+  specs:
+    - type: openapi
+      repo: LandRegistry/dm-deed-api
+      path: application/deed/schemas/deed-api.json
+      output: companies/providers/landregistry/openapi/landregistry.json
+- name: lufthansaopenapi
+  display_name: LH Partner API
+  specs:
+    - type: openapi
+      repo: LufthansaOpenAPI/Swagger4Partners
+      path: LH-OpenAPI-Partners-Swagger2.json
+      output: companies/providers/lufthansaopenapi/openapi/lufthansaopenapi.json
+- name: maif
+  display_name: Otoroshi Admin API
+  specs:
+    - type: openapi
+      repo: MAIF/otoroshi
+      path: docs/manual/code/swagger.json
+      output: companies/providers/maif/openapi/maif.json
+- name: packom
+  display_name: M-Bus HTTPD API
+  specs:
+    - type: openapi
+      repo: packom/mbus-api
+      path: api/openapi.yaml
+      output: companies/providers/packom/openapi/packom.yaml
+- name: dunglas
+  display_name: The Mercure protocol
+  specs:
+    - type: openapi
+      repo: dunglas/mercure
+      path: spec/openapi.yaml
+      output: companies/providers/dunglas/openapi/dunglas.yaml
+- name: miataru
+  display_name: Miataru
+  specs:
+    - type: openapi
+      repo: miataru/miataru-protocol-specification
+      path: miataru-v1/api/swagger/swagger.yaml
+      output: companies/providers/miataru/openapi/miataru.yaml
+- name: microcks
+  display_name: Microcks API v1.7
+  specs:
+    - type: openapi
+      repo: microcks/microcks
+      path: api/microcks-openapi-v1.7.yaml
+      output: companies/providers/microcks/openapi/microcks.yaml
+- name: microsoftgraph
+  display_name: OData Service for namespace microsoft.graph
+  specs:
+    - type: openapi
+      repo: microsoftgraph/msgraph-metadata
+      path: openapi/v1.0/openapi.yaml
+      output: companies/providers/microsoftgraph/openapi/microsoftgraph.yaml
+- name: kalebu
+  display_name: Mtaa API Documentation
+  specs:
+    - type: openapi
+      repo: Kalebu/mtaa-docs
+      path: openapi.yaml
+      output: companies/providers/kalebu/openapi/kalebu.yaml
+- name: musixmatch
+  display_name: Musixmatch API
+  specs:
+    - type: openapi
+      repo: musixmatch/musixmatch-sdk
+      path: swagger/swagger.yaml
+      output: companies/providers/musixmatch/openapi/musixmatch.yaml
+- name: danielwelch
+  display_name: NBA Stats API
+  specs:
+    - type: openapi
+      repo: danielwelch/little-pynny
+      path: little-pynny/swagger.json
+      output: companies/providers/danielwelch/openapi/danielwelch.json
+- name: neblioteam
+  display_name: Neblio REST API Suite
+  specs:
+    - type: openapi
+      repo: NeblioTeam/neblio-api-swagger-docs
+      path: swagger.yaml
+      output: companies/providers/neblioteam/openapi/neblioteam.yaml
+- name: cbornet
+  display_name: Netatmo
+  specs:
+    - type: openapi
+      repo: cbornet/netatmo-swagger-decl
+      path: spec/swagger.yaml
+      output: companies/providers/cbornet/openapi/cbornet.yaml
+- name: nytimes
+  display_name: Archive API
+  specs:
+    - type: openapi
+      repo: nytimes/public_api_specs
+      path: archive_api/archive_api.json
+      output: companies/providers/nytimes/openapi/nytimes.json
