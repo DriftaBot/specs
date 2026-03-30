@@ -2790,8 +2790,20 @@ paths:
       tags:
         - Register
       responses:
-        '204':
+        '200':
           description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: object
+                    properties:
+                      id:
+                        $ref: '#/components/schemas/UserRegistrationState'
+                      label:
+                        type: string
         '400':
           description: request error
         '403':
@@ -2818,7 +2830,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserRegistration'
+                type: object
+                properties:
+                  state:
+                    type: object
+                    properties:
+                      id:
+                        $ref: '#/components/schemas/UserRegistrationState'
+                      label:
+                        type: string
         '400':
           description: request error or signup approval is not enabled on the instance
         '403':
@@ -2918,6 +2938,13 @@ paths:
             - createdAt
             - state
             - -state
+        - name: stateOneOf
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/UserRegistrationState'
       responses:
         '200':
           description: successful operation
@@ -7567,6 +7594,13 @@ paths:
             type: array
             items:
               $ref: '#/components/schemas/RunnerJobState'
+        - name: typeOneOf
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/RunnerJobType'
       responses:
         '200':
           description: successful operation
@@ -11846,6 +11880,14 @@ components:
       required:
         - moderationResponse
 
+    UserRegistrationState:
+      type: integer
+      enum:
+        - 1
+        - 2
+        - 3
+      description: 'The registration state (Pending = `1`, Rejected = `2`, Accepted = `3`)'
+
     UserRegistration:
       properties:
         id:
@@ -11854,12 +11896,7 @@ components:
           type: object
           properties:
             id:
-              type: integer
-              enum:
-                - 1
-                - 2
-                - 3
-              description: 'The registration state (Pending = `1`, Rejected = `2`, Accepted = `3`)'
+              $ref: '#/components/schemas/UserRegistrationState'
             label:
               type: string
         registrationReason:
